@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3 uid="uid://k1nf1dhueuvi"]
+
+[ext_resource type="PackedScene" uid="uid://ckhdxxp5ap7j7" path="res://Scenes/Player.tscn" id="1_804uo"]
+
+[sub_resource type="Environment" id="Environment_tgusr"]
+ambient_light_energy = 0.0
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Floor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.01, 0, 0, 0, 3.23, -1.5, 0, -1)
+use_collision = true
+size = Vector3(26, 1, 7)
+
+[node name="Wall1" type="CSGBox3D" parent="."]
+transform = Transform3D(0.106324, 0, 0, 0, 7.14496, 0, 0, 0, 8.01076, 11.4735, 3.57912, -1.02897)
+size = Vector3(1, 1.00537, 2.81323)
+
+[node name="Wall2" type="CSGBox3D" parent="."]
+transform = Transform3D(0.106324, 0, 0, 0, 7.14496, 0, 0, 0, 8.01076, -14.4332, 3.57912, -1.02897)
+size = Vector3(1, 1.00537, 2.81323)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_tgusr")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="Player" parent="." instance=ExtResource("1_804uo")]
