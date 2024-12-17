@@ -1,26 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://k1nf1dhueuvi"]
+[gd_scene load_steps=2 format=3 uid="uid://k1nf1dhueuvi"]
 
-[ext_resource type="Shader" path="res://Scenes/Level Scenes/TestLevel.gdshader" id="1_6mknt"]
 [ext_resource type="PackedScene" uid="uid://ckhdxxp5ap7j7" path="res://Scenes/Player.tscn" id="1_804uo"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_lbpf7"]
-shader = ExtResource("1_6mknt")
-shader_parameter/skyColor = Color(0.00784314, 0.458824, 0.976471, 1)
-
-[sub_resource type="Sky" id="Sky_26vx0"]
-sky_material = SubResource("ShaderMaterial_lbpf7")
-
-[sub_resource type="Environment" id="Environment_tgusr"]
-background_mode = 2
-sky = SubResource("Sky_26vx0")
-ambient_light_source = 3
-reflected_light_source = 2
-ssao_enabled = true
-sdfgi_enabled = true
-glow_intensity = 0.0
-fog_light_color = Color(0.517647, 0.552941, 0.537255, 1)
-fog_light_energy = 0.0
-fog_height = 25.35
 
 [node name="Node3D" type="Node3D"]
 
@@ -60,16 +40,5 @@ size = Vector3(10.0254, 0.583801, 1.50459)
 [node name="Wall6" type="CSGBox3D" parent="."]
 transform = Transform3D(-4.49806e-09, 1.45602e-15, -8.01076, 0.102904, -0.012106, -3.50161e-07, -0.000174207, -7.15094, 5.9279e-10, 2.83224, 5.69035, -38.4196)
 size = Vector3(10.0254, 1.58429, 0.997452)
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_tgusr")
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.985999, -0.104142, -0.130233, 0, -0.780998, 0.624534, -0.166752, 0.61579, 0.770063, -3.68852, 10.1145, -16.5)
-light_energy = 0.839
-light_indirect_energy = 2.454
-light_volumetric_fog_energy = 12.121
-light_angular_distance = 43.6
-light_negative = true
 
 [node name="Player" parent="." instance=ExtResource("1_804uo")]
