@@ -177,6 +177,7 @@ func _physics_process(delta: float) -> void:
 	
 	if direction:
 		velocity.x = direction.x * current_speed
+		print("Wow")
 		
 		velocity.z = direction.z * current_speed
 		
