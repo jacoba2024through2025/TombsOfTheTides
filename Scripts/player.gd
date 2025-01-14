@@ -8,12 +8,32 @@ extends CharacterBody3D
 @onready var crouching_collision_shape: CollisionShape3D = $crouching_collision_shape
 @onready var ray_cast_3d: RayCast3D = $RayCast3D
 @onready var eyes: Node3D = $nek/head/eyes
+@onready var animation_player: AnimationPlayer = $nek/head/eyes/AnimationPlayer
+@onready var interaction: RayCast3D = $nek/head/eyes/Camera3D/Interaction
+@onready var hand: Marker3D = $nek/head/eyes/Camera3D/hand
+@onready var joint: Generic6DOFJoint3D = $nek/head/eyes/Camera3D/Generic6DOFJoint3D
+@onready var staticbody: StaticBody3D = $nek/head/eyes/Camera3D/StaticBody3D
+
+#All grab variables
+var picked_object
+var pull_power = 4
+
+var rotation_power = 0.05
+var locked = false
+
+
+
+
+# grab variables end
+
+
 
 var current_speed = 5.0
 const walking_speed = 5.0
 const sprinting_speed = 8.0
 const crouching_speed = 3.0
-
+var last_velocity = Vector3.ZERO
+var climbing_speed = 150.0
 #Sliding vars
 var slide_timer = 0.0
 var slide_timer_max = 1.0
@@ -33,6 +53,7 @@ var free_look_tilt_amount = 8.5
 
 const jump_velocity = 4.5
 var lerp_speed = 10.0
+var air_lerp_speed = 3.0
 const mouse_sens = 0.25
 var crouching_depth = -0.5
 var direction = Vector3.ZERO
@@ -54,9 +75,43 @@ var head_bobbing_current_intensity = 0.0
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
+func pick_object():
+	var collider = interaction.get_collider()
+	if collider != null and collider is RigidBody3D:
+		picked_object = collider
+		joint.set_node_b(picked_object.get_path())
+
+func rotate_object(event):
+	if picked_object != null:
+		if event is InputEventMouseMotion:
+			staticbody.rotate_x(deg_to_rad(event.relative.y * rotation_power))
+			staticbody.rotate_y(deg_to_rad(event.relative.x * rotation_power))
+		
+		
+func remove_object():
+	if picked_object != null:
+		picked_object = null
+		joint.set_node_b(joint.get_path())
 func _input(event):
 	
-	
+	if Input.is_action_just_pressed("interact"):
+		if picked_object == null:
+			pick_object()
+		elif picked_object != null:
+			remove_object()
+	if Input.is_action_pressed('rclick'):
+		locked = true
+		rotate_object(event)
+		print("Function being called", "Locked:", locked)
+	if Input.is_action_just_released('rclick'):
+		locked = false
+		print("Function not called", locked)
+		
+	if Input.is_action_just_pressed("throw"):
+		if picked_object != null:
+			var knockback = picked_object.global_position - global_position
+			picked_object.apply_central_impulse(knockback * 5)
+			remove_object()
 	if event is InputEventMouseMotion:
 		
 		if free_looking:
@@ -77,7 +132,7 @@ func _physics_process(delta: float) -> void:
 	
 	if Input.is_action_pressed("crouch") || sliding:
 		head.position.y = lerp(head.position.y, 1.8 + crouching_depth, delta*lerp_speed)
-		current_speed = crouching_speed
+		current_speed = lerp(current_speed, crouching_speed, delta * lerp_speed)
 		standing_collision_shape.disabled = true
 		crouching_collision_shape.disabled = false
 		
@@ -103,14 +158,14 @@ func _physics_process(delta: float) -> void:
 		head.position.y = lerp(head.position.y, 0.0, delta*lerp_speed)
 		head.position.y = 1.8
 		if Input.is_action_pressed("sprint"):
-			current_speed = sprinting_speed
+			current_speed = lerp(current_speed, sprinting_speed, delta * lerp_speed)
 			
 			walking = false
 			sprinting = true
 			crouching = false	
 				
 		else:
-			current_speed = walking_speed
+			current_speed = lerp(current_speed, walking_speed, delta * lerp_speed)
 			
 			walking = true
 			sprinting = false
@@ -119,14 +174,14 @@ func _physics_process(delta: float) -> void:
 		free_looking = true
 		
 		if sliding:
-			camera_3d.rotation.z = lerp(camera_3d.rotation.z, -deg_to_rad(7.0), delta * lerp_speed		)
+			eyes.rotation.z = lerp(eyes.rotation.z, -deg_to_rad(7.0), delta * lerp_speed		)
 			
 		else:
-			camera_3d.rotation.z = -deg_to_rad(nek.rotation.y * free_look_tilt_amount)
+			eyes.rotation.z = -deg_to_rad(nek.rotation.y * free_look_tilt_amount)
 	else:
 		free_looking = false
 		nek.rotation.y = lerp(nek.rotation.y, 0.0, delta*lerp_speed)
-		camera_3d.rotation.z = lerp(camera_3d.rotation.z, 0.0, delta*lerp_speed)
+		eyes.rotation.z = lerp(eyes.rotation.z, 0.0, delta*lerp_speed)
 		
 	if sliding:
 		slide_timer -= delta
@@ -165,27 +220,45 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
 		velocity.y = jump_velocity
 		sliding = false
-
+		animation_player.play("jump")
+	
+	# Handle landing
+	if is_on_floor():
+		if last_velocity.y < 0.0:
+			animation_player.play("landing")
+			print(last_velocity.y)
+	
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	
-	
-	direction = lerp(direction,(transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized(),delta*lerp_speed)
-	
+	if is_on_floor():
+		direction = lerp(direction,(transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized(),delta*lerp_speed)
+	else:
+		if input_dir != Vector2.ZERO:
+			direction = lerp(direction,(transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized(),delta*air_lerp_speed)
 	if sliding:
 		direction = (transform.basis * Vector3(slide_vector.x,0,slide_vector.y)).normalized()
-	
+		
+		current_speed = (slide_timer + 0.1) * slide_speed
+		
 	if direction:
 		velocity.x = direction.x * current_speed
-		print("Wow")
+		
 		
 		velocity.z = direction.z * current_speed
 		
-		if sliding:
-			velocity.x = direction.x * (slide_timer + 0.1) * slide_speed
-			velocity.z = direction.z * (slide_timer + 0.1)	 * slide_speed
+		
 	else:
 		velocity.x = move_toward(velocity.x, 0, current_speed)
 		velocity.z = move_toward(velocity.z, 0, current_speed)
-
+	
+	if picked_object != null:
+		var a = picked_object.global_transform.origin
+		var b = hand.global_transform.origin
+		picked_object.set_linear_velocity((b-a)*pull_power)
+	
+	
+	last_velocity = velocity
 	move_and_slide()
+	
+	

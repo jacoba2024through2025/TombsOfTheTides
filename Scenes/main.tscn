@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://k1nf1dhueuvi"]
+[gd_scene load_steps=22 format=3 uid="uid://k1nf1dhueuvi"]
 
 [ext_resource type="Texture2D" uid="uid://ckrsj5go8ckwh" path="res://assets/textures/dev/grids/Dark/texture_07.png" id="1_1ox7n"]
 [ext_resource type="Texture2D" uid="uid://dw5jd84o6801p" path="res://assets/hdris/kloofendal_48d_partly_cloudy_puresky_2k.hdr" id="2_sg6od"]
@@ -24,14 +24,135 @@ tonemap_mode = 2
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_wf5i0"]
 height = 1.2
 
+[sub_resource type="Animation" id="Animation_ycxki"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Camera3D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Camera3D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_tk0n7"]
+resource_name = "jump"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Camera3D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.1001, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(-0.0523599, 0, 0), Vector3(0, 0, 0), Vector3(0.0523599, 0, 0.0349066), Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Camera3D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, -0.1, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_0dtul"]
+resource_name = "landing"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Camera3D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.1001, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(-0.0523599, 0, 0), Vector3(0, 0, 0), Vector3(0.0523599, 0, 0.0349066), Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Camera3D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, -0.1, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_owwci"]
+_data = {
+"RESET": SubResource("Animation_ycxki"),
+"jump": SubResource("Animation_tk0n7"),
+"landing": SubResource("Animation_0dtul")
+}
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xpugk"]
+albedo_color = Color(1, 0.647059, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_326ni"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jjnxj"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_clls5"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_eiuh1"]
+seamless = true
+as_normal_map = true
+noise = SubResource("FastNoiseLite_clls5")
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_cysjw"]
+seamless = true
+as_normal_map = true
+noise = SubResource("FastNoiseLite_clls5")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cmv3j"]
+depth_draw_mode = 1
+albedo_color = Color(0.0470588, 0.317647, 0.466667, 0.505882)
+roughness = 0.0
+normal_enabled = true
+normal_texture = SubResource("NoiseTexture2D_eiuh1")
+refraction_enabled = true
+refraction_texture = SubResource("NoiseTexture2D_cysjw")
+
+[sub_resource type="BoxMesh" id="BoxMesh_nwmko"]
+material = SubResource("StandardMaterial3D_cmv3j")
+
 [node name="world" type="Node3D"]
 
 [node name="stage" type="Node3D" parent="."]
 
 [node name="CSGBox3D" type="CSGBox3D" parent="stage"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00421476, -0.5, -0.0127044)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.56878, -0.5, -0.0127044)
 use_collision = true
-size = Vector3(20, 1, 20)
+size = Vector3(35.146, 1, 20)
 material = SubResource("StandardMaterial3D_dvn77")
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="stage"]
@@ -71,3 +192,37 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
 [node name="eyes" type="Node3D" parent="player/nek/head"]
 
 [node name="Camera3D" type="Camera3D" parent="player/nek/head/eyes"]
+
+[node name="Interaction" type="RayCast3D" parent="player/nek/head/eyes/Camera3D"]
+target_position = Vector3(0, 0, -5)
+
+[node name="hand" type="Marker3D" parent="player/nek/head/eyes/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.49506)
+
+[node name="Generic6DOFJoint3D" type="Generic6DOFJoint3D" parent="player/nek/head/eyes/Camera3D"]
+node_a = NodePath("../StaticBody3D")
+linear_limit_x/enabled = false
+
+[node name="StaticBody3D" type="StaticBody3D" parent="player/nek/head/eyes/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.495)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="player/nek/head/eyes"]
+libraries = {
+"": SubResource("AnimationLibrary_owwci")
+}
+
+[node name="box" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.50765, 0.639908, -0.153813)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="box"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.23411, 0)
+material_override = SubResource("StandardMaterial3D_xpugk")
+mesh = SubResource("BoxMesh_326ni")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="box"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.23591, 0)
+shape = SubResource("BoxShape3D_jjnxj")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.2769, 1.1518, 0)
+mesh = SubResource("BoxMesh_nwmko")
