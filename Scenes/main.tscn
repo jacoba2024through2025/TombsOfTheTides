@@ -1,8 +1,20 @@
-[gd_scene load_steps=22 format=3 uid="uid://k1nf1dhueuvi"]
+[gd_scene load_steps=36 format=3 uid="uid://k1nf1dhueuvi"]
 
 [ext_resource type="Texture2D" uid="uid://ckrsj5go8ckwh" path="res://assets/textures/dev/grids/Dark/texture_07.png" id="1_1ox7n"]
 [ext_resource type="Texture2D" uid="uid://dw5jd84o6801p" path="res://assets/hdris/kloofendal_48d_partly_cloudy_puresky_2k.hdr" id="2_sg6od"]
 [ext_resource type="Script" path="res://scripts/player.gd" id="3_kogik"]
+[ext_resource type="AudioStream" uid="uid://ccolx0f63u8ng" path="res://sound effects/FootstepsConcrete2.wav" id="4_474qq"]
+[ext_resource type="AudioStream" uid="uid://dgopdfvvmgjya" path="res://sound effects/HumanInjured5.wav" id="5_1c2xu"]
+[ext_resource type="AudioStream" uid="uid://dyupgtipuxmbf" path="res://sound effects/FootstepsStoneDirt4.wav" id="6_oan3t"]
+[ext_resource type="AudioStream" uid="uid://cgvcec72hs3fh" path="res://sound effects/FoodPackagingDriedSoupBox2.wav" id="7_tbau1"]
+[ext_resource type="AudioStream" uid="uid://dsb405joff6ib" path="res://sound effects/WoodLogHandling2.wav" id="8_h7ovj"]
+[ext_resource type="AudioStream" uid="uid://dkib6prhrfy3j" path="res://sound effects/LargeBagHandling3.wav" id="9_nqawb"]
+[ext_resource type="AudioStream" uid="uid://cdifw6n5m8e1o" path="res://sound effects/WaterSplash1.wav" id="10_dlfof"]
+[ext_resource type="Script" path="res://scenes/box.gd" id="10_pqk1r"]
+[ext_resource type="AudioStream" uid="uid://dwpqu5ibm67tm" path="res://sound effects/WoodLogHandling1.wav" id="11_41144"]
+[ext_resource type="Script" path="res://scenes/water.gd" id="12_wdkii"]
+[ext_resource type="AudioStream" uid="uid://brt1o7w750try" path="res://sound effects/WaterSplash2.wav" id="14_b85pc"]
+[ext_resource type="AudioStream" uid="uid://bycd4qj6hl0i2" path="res://sound effects/CoastalWavesOnRocksLoop.wav" id="14_r3yo2"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dvn77"]
 albedo_texture = ExtResource("1_1ox7n")
@@ -121,29 +133,139 @@ albedo_color = Color(1, 0.647059, 0, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_jjnxj"]
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_clls5"]
+[sub_resource type="Shader" id="Shader_708qe"]
+code = "// NOTE: Shader automatically converted from Godot Engine 4.3.stable's StandardMaterial3D.
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_eiuh1"]
+shader_type spatial;
+render_mode blend_mix, depth_draw_always, cull_back, diffuse_burley, specular_schlick_ggx;
+
+uniform vec4 albedo : source_color;
+uniform sampler2D texture_albedo : source_color, filter_linear_mipmap, repeat_enable;
+uniform float point_size : hint_range(0.1, 128.0, 0.1);
+
+uniform float roughness : hint_range(0.0, 1.0);
+uniform sampler2D texture_metallic : hint_default_white, filter_linear_mipmap, repeat_enable;
+uniform vec4 metallic_texture_channel;
+uniform sampler2D texture_roughness : hint_roughness_r, filter_linear_mipmap, repeat_enable;
+
+uniform float specular : hint_range(0.0, 1.0, 0.01);
+uniform float metallic : hint_range(0.0, 1.0, 0.01);
+
+uniform sampler2D texture_refraction : filter_linear_mipmap, repeat_enable;
+uniform float refraction : hint_range(-1.0, 1.0, 0.001);
+uniform vec4 refraction_texture_channel;
+uniform sampler2D screen_texture : hint_screen_texture, repeat_disable, filter_linear_mipmap;
+
+uniform sampler2D texture_normal : hint_roughness_normal, filter_linear_mipmap, repeat_enable;
+uniform float normal_scale : hint_range(-16.0, 16.0);
+varying vec3 uv1_triplanar_pos;
+
+uniform float uv1_blend_sharpness : hint_range(0.0, 150.0, 0.001);
+varying vec3 uv1_power_normal;
+
+uniform vec3 uv1_scale;
+uniform vec3 uv1_offset;
+uniform vec3 uv2_scale;
+uniform vec3 uv2_offset;
+
+void vertex() {
+	vec3 normal = MODEL_NORMAL_MATRIX * NORMAL;
+
+	TANGENT = vec3(0.0, 0.0, -1.0) * abs(normal.x);
+	TANGENT += vec3(1.0, 0.0, 0.0) * abs(normal.y);
+	TANGENT += vec3(1.0, 0.0, 0.0) * abs(normal.z);
+	TANGENT = inverse(MODEL_NORMAL_MATRIX) * normalize(TANGENT);
+
+	BINORMAL = vec3(0.0, 1.0, 0.0) * abs(normal.x);
+	BINORMAL += vec3(0.0, 0.0, -1.0) * abs(normal.y);
+	BINORMAL += vec3(0.0, 1.0, 0.0) * abs(normal.z);
+	BINORMAL = inverse(MODEL_NORMAL_MATRIX) * normalize(BINORMAL);
+
+	// UV1 Triplanar: Enabled (with World Triplanar)
+	uv1_power_normal = pow(abs(normal), vec3(uv1_blend_sharpness));
+	uv1_triplanar_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz * uv1_scale + uv1_offset + TIME * 0.1;
+	uv1_power_normal /= dot(uv1_power_normal, vec3(1.0));
+	uv1_triplanar_pos *= vec3(1.0, -1.0, 1.0);
+}
+
+vec4 triplanar_texture(sampler2D p_sampler, vec3 p_weights, vec3 p_triplanar_pos) {
+	vec4 samp = vec4(0.0);
+	samp += texture(p_sampler, p_triplanar_pos.xy) * p_weights.z;
+	samp += texture(p_sampler, p_triplanar_pos.xz) * p_weights.y;
+	samp += texture(p_sampler, p_triplanar_pos.zy * vec2(-1.0, 1.0)) * p_weights.x;
+	return samp;
+}
+
+void fragment() {
+	vec4 albedo_tex = triplanar_texture(texture_albedo, uv1_power_normal, uv1_triplanar_pos);
+	ALBEDO = albedo.rgb * albedo_tex.rgb;
+
+	float metallic_tex = dot(triplanar_texture(texture_metallic, uv1_power_normal, uv1_triplanar_pos), metallic_texture_channel);
+	METALLIC = metallic_tex * metallic;
+	SPECULAR = specular;
+
+	vec4 roughness_texture_channel = vec4(1.0, 0.0, 0.0, 0.0);
+	float roughness_tex = dot(triplanar_texture(texture_roughness, uv1_power_normal, uv1_triplanar_pos), roughness_texture_channel);
+	ROUGHNESS = roughness_tex * roughness;
+
+	// Normal Map: Enabled
+	NORMAL_MAP = triplanar_texture(texture_normal, uv1_power_normal, uv1_triplanar_pos).rgb;
+	NORMAL_MAP_DEPTH = normal_scale;
+
+	// Refraction: Enabled (with normal map texture)
+	vec3 unpacked_normal = NORMAL_MAP;
+	unpacked_normal.xy = unpacked_normal.xy * 2.0 - 1.0;
+	unpacked_normal.z = sqrt(max(0.0, 1.0 - dot(unpacked_normal.xy, unpacked_normal.xy)));
+	vec3 ref_normal = normalize(mix(
+			NORMAL,
+			TANGENT * unpacked_normal.x + BINORMAL * unpacked_normal.y + NORMAL * unpacked_normal.z,
+			NORMAL_MAP_DEPTH));
+	vec2 ref_ofs = SCREEN_UV - ref_normal.xy * dot(triplanar_texture(texture_refraction, uv1_power_normal, uv1_triplanar_pos), refraction_texture_channel) * refraction;
+
+	float ref_amount = 1.0 - albedo.a * albedo_tex.a;
+	EMISSION += textureLod(screen_texture, ref_ofs, ROUGHNESS * 8.0).rgb * ref_amount * EXPOSURE;
+	ALBEDO *= 1.0 - ref_amount;
+	// Force transparency on the material (required for refraction).
+	ALPHA = 1.0;
+}
+"
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_abpr8"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_6rtb8"]
 seamless = true
 as_normal_map = true
-noise = SubResource("FastNoiseLite_clls5")
+noise = SubResource("FastNoiseLite_abpr8")
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_cysjw"]
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_u0j2w"]
 seamless = true
 as_normal_map = true
-noise = SubResource("FastNoiseLite_clls5")
+noise = SubResource("FastNoiseLite_abpr8")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cmv3j"]
-depth_draw_mode = 1
-albedo_color = Color(0.0470588, 0.317647, 0.466667, 0.505882)
-roughness = 0.0
-normal_enabled = true
-normal_texture = SubResource("NoiseTexture2D_eiuh1")
-refraction_enabled = true
-refraction_texture = SubResource("NoiseTexture2D_cysjw")
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kox3b"]
+render_priority = 0
+shader = SubResource("Shader_708qe")
+shader_parameter/albedo = Color(0.333333, 0.619608, 1, 0.403922)
+shader_parameter/point_size = 1.0
+shader_parameter/roughness = 0.0
+shader_parameter/metallic_texture_channel = null
+shader_parameter/specular = 0.5
+shader_parameter/metallic = 0.0
+shader_parameter/refraction = 0.05
+shader_parameter/refraction_texture_channel = null
+shader_parameter/normal_scale = 1.0
+shader_parameter/uv1_blend_sharpness = 1.0
+shader_parameter/uv1_scale = Vector3(0.1, 0.1, 0.1)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
+shader_parameter/texture_refraction = SubResource("NoiseTexture2D_u0j2w")
+shader_parameter/texture_normal = SubResource("NoiseTexture2D_6rtb8")
 
-[sub_resource type="BoxMesh" id="BoxMesh_nwmko"]
-material = SubResource("StandardMaterial3D_cmv3j")
+[sub_resource type="BoxMesh" id="BoxMesh_bj45o"]
+material = SubResource("ShaderMaterial_kox3b")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tjkvi"]
 
 [node name="world" type="Node3D"]
 
@@ -153,6 +275,12 @@ material = SubResource("StandardMaterial3D_cmv3j")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.56878, -0.5, -0.0127044)
 use_collision = true
 size = Vector3(35.146, 1, 20)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -42.547, -8.85961, -0.0127044)
+use_collision = true
+size = Vector3(47.4098, 1, 20)
 material = SubResource("StandardMaterial3D_dvn77")
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="stage"]
@@ -211,8 +339,33 @@ libraries = {
 "": SubResource("AnimationLibrary_owwci")
 }
 
+[node name="Footstep" type="AudioStreamPlayer3D" parent="player"]
+stream = ExtResource("4_474qq")
+volume_db = -15.0
+
+[node name="Jumping" type="AudioStreamPlayer3D" parent="player"]
+stream = ExtResource("5_1c2xu")
+
+[node name="Landing" type="AudioStreamPlayer3D" parent="player"]
+stream = ExtResource("6_oan3t")
+
+[node name="Slide" type="AudioStreamPlayer3D" parent="player"]
+stream = ExtResource("7_tbau1")
+
+[node name="ObjectPickup" type="AudioStreamPlayer3D" parent="player"]
+stream = ExtResource("8_h7ovj")
+
+[node name="ObjectThrow" type="AudioStreamPlayer3D" parent="player"]
+stream = ExtResource("9_nqawb")
+
+[node name="WaterSound" type="AudioStreamPlayer3D" parent="player"]
+stream = ExtResource("10_dlfof")
+
 [node name="box" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.50765, 0.639908, -0.153813)
+contact_monitor = true
+max_contacts_reported = 1
+script = ExtResource("10_pqk1r")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="box"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.23411, 0)
@@ -223,6 +376,26 @@ mesh = SubResource("BoxMesh_326ni")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.23591, 0)
 shape = SubResource("BoxShape3D_jjnxj")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.2769, 1.1518, 0)
-mesh = SubResource("BoxMesh_nwmko")
+[node name="BoxImpact" type="AudioStreamPlayer3D" parent="box"]
+stream = ExtResource("11_41144")
+
+[node name="Water" type="MeshInstance3D" parent="."]
+transform = Transform3D(13, 0, 0, 0, 1.831, 0, 0, 0, 13, -18.011, 0.739303, 0)
+mesh = SubResource("BoxMesh_bj45o")
+script = ExtResource("12_wdkii")
+
+[node name="Sound Detection" type="Area3D" parent="Water"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Water/Sound Detection"]
+shape = SubResource("BoxShape3D_tjkvi")
+
+[node name="RunningWater" type="AudioStreamPlayer3D" parent="Water"]
+stream = ExtResource("14_r3yo2")
+
+[node name="ObjectSplash" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("14_b85pc")
+
+[connection signal="body_entered" from="box" to="box" method="_on_body_entered"]
+[connection signal="finished" from="box/BoxImpact" to="box" method="_on_box_impact_finished"]
+[connection signal="body_entered" from="Water/Sound Detection" to="player" method="_on_sound_detection_body_entered"]
+[connection signal="body_exited" from="Water/Sound Detection" to="player" method="_on_sound_detection_body_exited"]
