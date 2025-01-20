@@ -1,6 +1,7 @@
-[gd_scene load_steps=36 format=3 uid="uid://k1nf1dhueuvi"]
+[gd_scene load_steps=54 format=3 uid="uid://k1nf1dhueuvi"]
 
 [ext_resource type="Texture2D" uid="uid://ckrsj5go8ckwh" path="res://assets/textures/dev/grids/Dark/texture_07.png" id="1_1ox7n"]
+[ext_resource type="Script" path="res://Scenes/main.gd" id="1_6kpv3"]
 [ext_resource type="Texture2D" uid="uid://dw5jd84o6801p" path="res://assets/hdris/kloofendal_48d_partly_cloudy_puresky_2k.hdr" id="2_sg6od"]
 [ext_resource type="Script" path="res://scripts/player.gd" id="3_kogik"]
 [ext_resource type="AudioStream" uid="uid://ccolx0f63u8ng" path="res://sound effects/FootstepsConcrete2.wav" id="4_474qq"]
@@ -12,9 +13,15 @@
 [ext_resource type="AudioStream" uid="uid://cdifw6n5m8e1o" path="res://sound effects/WaterSplash1.wav" id="10_dlfof"]
 [ext_resource type="Script" path="res://scenes/box.gd" id="10_pqk1r"]
 [ext_resource type="AudioStream" uid="uid://dwpqu5ibm67tm" path="res://sound effects/WoodLogHandling1.wav" id="11_41144"]
+[ext_resource type="Texture2D" uid="uid://b5rrqx8fn3u7o" path="res://assets/textures/hurtoverlay/hurt.png" id="11_yteeq"]
+[ext_resource type="AudioStream" uid="uid://bpoul6eiat67q" path="res://sound effects/HumanInjured2.wav" id="12_jktyx"]
 [ext_resource type="Script" path="res://scenes/water.gd" id="12_wdkii"]
 [ext_resource type="AudioStream" uid="uid://brt1o7w750try" path="res://sound effects/WaterSplash2.wav" id="14_b85pc"]
 [ext_resource type="AudioStream" uid="uid://bycd4qj6hl0i2" path="res://sound effects/CoastalWavesOnRocksLoop.wav" id="14_r3yo2"]
+[ext_resource type="Texture2D" uid="uid://1avw8r08vy6a" path="res://kenney_crosshair-pack/PNG/White/crosshair020.png" id="18_5m1h5"]
+[ext_resource type="AudioStream" uid="uid://dfyxkoatqbjd5" path="res://sound effects/music/Tomb of Tides In Game.wav" id="20_do3yu"]
+[ext_resource type="Script" path="res://Scenes/spinning_sphere.gd" id="21_2legu"]
+[ext_resource type="PackedScene" uid="uid://bxlvmfpioparp" path="res://pause_menu.tscn" id="22_tiefe"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dvn77"]
 albedo_texture = ExtResource("1_1ox7n")
@@ -125,6 +132,18 @@ _data = {
 "jump": SubResource("Animation_tk0n7"),
 "landing": SubResource("Animation_0dtul")
 }
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s6oh7"]
+bg_color = Color(0.133333, 0.133333, 0.133333, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d3i26"]
+bg_color = Color(1, 0.34902, 0.2, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_goxhc"]
+bg_color = Color(0.133333, 0.133333, 0.133333, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_japrs"]
+bg_color = Color(0, 0, 1, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xpugk"]
 albedo_color = Color(1, 0.647059, 0, 1)
@@ -267,26 +286,254 @@ material = SubResource("ShaderMaterial_kox3b")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_tjkvi"]
 
+[sub_resource type="Curve" id="Curve_231tk"]
+_data = [Vector2(0.00294986, 0.0133256), 0.0, 0.0, 0, 0, Vector2(0.250737, 1), 0.0, 0.0, 0, 0, Vector2(0.764012, 1), 0.0, 0.0, 0, 0, Vector2(0.887906, 1), 0.0, 0.0, 0, 0, Vector2(0.9941, 0), 0.0115539, 0.0, 0, 0]
+point_count = 5
+
+[sub_resource type="CurveTexture" id="CurveTexture_ncw01"]
+curve = SubResource("Curve_231tk")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_o3kt3"]
+emission_shape = 2
+emission_sphere_radius = 2.0
+gravity = Vector3(0, 0, 0)
+alpha_curve = SubResource("CurveTexture_ncw01")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_53jth"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(0, 0.788235, 0.756863, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_tnel0"]
+material = SubResource("StandardMaterial3D_53jth")
+radius = 0.05
+height = 0.1
+
+[sub_resource type="GDScript" id="GDScript_vjldx"]
+script/source = "extends Area3D
+
+
+
+@onready var water: MeshInstance3D = $\"../../Water\"
+
+
+
+
+
+
+	
+
+
+
+"
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_rdh8d"]
+radius = 2.54085
+
 [node name="world" type="Node3D"]
+script = ExtResource("1_6kpv3")
 
 [node name="stage" type="Node3D" parent="."]
 
 [node name="CSGBox3D" type="CSGBox3D" parent="stage"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.56878, -0.5, -0.0127044)
 use_collision = true
+collision_layer = 3
+collision_mask = 3
 size = Vector3(35.146, 1, 20)
 material = SubResource("StandardMaterial3D_dvn77")
 
 [node name="CSGBox3D3" type="CSGBox3D" parent="stage"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -42.547, -8.85961, -0.0127044)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -37.3421, -8.85961, -0.0127044)
 use_collision = true
-size = Vector3(47.4098, 1, 20)
+collision_layer = 3
+collision_mask = 3
+size = Vector3(37, 1, 20)
 material = SubResource("StandardMaterial3D_dvn77")
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="stage"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.0042, 1.92946, -0.0127044)
 use_collision = true
+collision_layer = 3
+collision_mask = 3
 size = Vector3(20, 1, 20)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -39.2858, -1.01863, 0.326804)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(16.6307, 1, 8.47211)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="CSGBox3D10" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40.1012, 2.32148, 0.323378)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(5, 2.89441, 19.4082)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="CSGBox3D11" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -52.6084, 0.109717, -1.22477)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(5, 1, 4.08421)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="CSGBox3D12" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -53.5493, 0.0601265, 8.2556)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(3.11816, 1, 3.27667)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="CSGBox3D13" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -49.0498, 1.31349, 8.2556)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(3.11816, 1, 3.27667)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="CSGBox3D14" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -47.7491, 2.37962, -7.89107)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(3.11816, 1, 3.27667)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="CSGBox3D15" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40.2331, 6.10812, -1.40243)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(3.11816, 1, 16.9918)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="CSGBox3D16" type="CSGBox3D" parent="stage"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -42.3088, 7.1882, -1.40243)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(3.11816, 1, 16.9918)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="CSGBox3D17" type="CSGBox3D" parent="stage"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -38.1852, 7.1882, 0.455243)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(3.11816, 1, 13.3034)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="CSGBox3D18" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1.91069e-15, 4.37114e-08, -1, 1, -4.37114e-08, 0, -4.37114e-08, -1, -4.37114e-08, -32.0503, 7.1882, -6.68688)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(3.11816, 1, 13.3034)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="CSGBox3D19" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1.91069e-15, 4.37114e-08, -1, 0, 1, 4.37114e-08, 1, 0, 1.91069e-15, -32.0503, 6.10929, -8.16857)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(2.08154, 1, 13.3034)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="CSGBox3D20" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1.91069e-15, 4.37114e-08, -1, 0, 1, 4.37114e-08, 1, 0, 1.91069e-15, -32.0503, 8.46247, -8.16857)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(2.08154, 0.563843, 13.3034)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="CSGBox3D22" type="CSGBox3D" parent="stage"]
+transform = Transform3D(-4.37114e-08, 1, 8.74228e-08, -1, -4.37114e-08, -3.82137e-15, 4.23516e-22, -8.74228e-08, 1, -19.0859, 7.05098, 0.331699)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(3.40179, 0.563843, 18.9403)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="CSGBox3D23" type="CSGBox3D" parent="stage"]
+transform = Transform3D(-4.37114e-08, 1, 8.74228e-08, -1, -4.37114e-08, -3.82137e-15, 4.23516e-22, -8.74228e-08, 1, -19.0859, 7.05098, 0.331699)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(3.40179, 0.563843, 18.9403)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="CSGBox3D24" type="CSGBox3D" parent="stage"]
+transform = Transform3D(-1.41557e-09, 1, 8.74228e-08, -0.0323845, -4.37114e-08, -3.82137e-15, 1.37154e-23, -8.74228e-08, 1, -19.6023, 5.41205, 0.327345)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(3.40179, 0.563843, 19.0319)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="CSGBox3D25" type="CSGBox3D" parent="stage"]
+transform = Transform3D(2.77556e-17, -4.47035e-08, 1, 2.83114e-09, -1, -8.9407e-08, 0.0323845, 8.74228e-08, 9.42489e-17, -26.381, 6.63013, 0.327345)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(3.40179, 3, 11)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="CSGBox3D21" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1.91069e-15, 4.37114e-08, -1, 0, 1, 4.37114e-08, 1, 0, 1.91069e-15, -40.2826, 8.46247, -1.05966)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(16.2993, 0.563843, 3.15279)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -26.9704, -1.01863, 0.3268)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(10, 1, 8.47211)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="CSGBox3D9" type="CSGBox3D" parent="stage"]
+transform = Transform3D(-4.37114e-08, -1, -4.37114e-08, 0, -4.37114e-08, 1, -1, 4.37114e-08, 1.91069e-15, -19.3824, -5.11925, 0.288409)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(19.1139, 1, 8.27087)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -37.3279, -0.254685, 10.3268)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(37, 1, 18)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="CSGBox3D7" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -37.3279, -0.254685, -9.6732)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(37, 1, 18)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="CSGBox3D8" type="CSGBox3D" parent="stage"]
+transform = Transform3D(-4.37114e-08, -1, -4.37114e-08, 0, -4.37114e-08, 1, -1, 4.37114e-08, 1.91069e-15, -55.3279, -0.254685, 0.326799)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(19, 1, 18)
 material = SubResource("StandardMaterial3D_dvn77")
 
 [node name="env" type="Node3D" parent="."]
@@ -299,6 +546,7 @@ transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -
 shadow_enabled = true
 
 [node name="player" type="CharacterBody3D" parent="."]
+collision_layer = 3
 script = ExtResource("3_kogik")
 
 [node name="standing_collision_shape" type="CollisionShape3D" parent="player"]
@@ -361,8 +609,49 @@ stream = ExtResource("9_nqawb")
 [node name="WaterSound" type="AudioStreamPlayer3D" parent="player"]
 stream = ExtResource("10_dlfof")
 
+[node name="HurtOverlay" type="TextureRect" parent="player"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("11_yteeq")
+
+[node name="HealthBar" type="ProgressBar" parent="player"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -50.0
+offset_right = 500.0
+grow_vertical = 0
+theme_override_styles/background = SubResource("StyleBoxFlat_s6oh7")
+theme_override_styles/fill = SubResource("StyleBoxFlat_d3i26")
+value = 100.0
+show_percentage = false
+
+[node name="DamageSound" type="AudioStreamPlayer3D" parent="player"]
+stream = ExtResource("12_jktyx")
+
+[node name="WallRunBar" type="ProgressBar" parent="player"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -500.0
+offset_top = -50.0
+offset_right = -83.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_styles/background = SubResource("StyleBoxFlat_goxhc")
+theme_override_styles/fill = SubResource("StyleBoxFlat_japrs")
+max_value = 1.0
+value = 1.0
+
 [node name="box" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.50765, 0.639908, -0.153813)
+collision_layer = 2
+collision_mask = 3
 contact_monitor = true
 max_contacts_reported = 1
 script = ExtResource("10_pqk1r")
@@ -380,22 +669,73 @@ shape = SubResource("BoxShape3D_jjnxj")
 stream = ExtResource("11_41144")
 
 [node name="Water" type="MeshInstance3D" parent="."]
-transform = Transform3D(13, 0, 0, 0, 1.831, 0, 0, 0, 13, -18.011, 0.739303, 0)
+transform = Transform3D(36.3878, 0, 0, 0, 4.25986, 0, 0, 0, 18.8718, -37.3873, -7.49321, 0.514363)
 mesh = SubResource("BoxMesh_bj45o")
 script = ExtResource("12_wdkii")
 
 [node name="Sound Detection" type="Area3D" parent="Water"]
+collision_layer = 3
+collision_mask = 3
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Water/Sound Detection"]
 shape = SubResource("BoxShape3D_tjkvi")
 
 [node name="RunningWater" type="AudioStreamPlayer3D" parent="Water"]
 stream = ExtResource("14_r3yo2")
+volume_db = -6.48
 
 [node name="ObjectSplash" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("14_b85pc")
+volume_db = 15.238
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="crosshair" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="cross" type="TextureRect" parent="CanvasLayer/crosshair"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("18_5m1h5")
+
+[node name="level_music" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("20_do3yu")
+
+[node name="SpinningSphere" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 1.5, 0)
+amount = 200
+lifetime = 10.0
+process_material = SubResource("ParticleProcessMaterial_o3kt3")
+draw_pass_1 = SubResource("SphereMesh_tnel0")
+script = ExtResource("21_2legu")
+
+[node name="particle_detection" type="Area3D" parent="SpinningSphere"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+script = SubResource("GDScript_vjldx")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SpinningSphere/particle_detection"]
+shape = SubResource("SphereShape3D_rdh8d")
+
+[node name="PauseMenu" parent="." instance=ExtResource("22_tiefe")]
 
 [connection signal="body_entered" from="box" to="box" method="_on_body_entered"]
 [connection signal="finished" from="box/BoxImpact" to="box" method="_on_box_impact_finished"]
 [connection signal="body_entered" from="Water/Sound Detection" to="player" method="_on_sound_detection_body_entered"]
 [connection signal="body_exited" from="Water/Sound Detection" to="player" method="_on_sound_detection_body_exited"]
+[connection signal="body_entered" from="SpinningSphere/particle_detection" to="player" method="_on_particle_detection_body_entered"]

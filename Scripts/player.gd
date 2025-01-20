@@ -22,6 +22,11 @@ extends CharacterBody3D
 @onready var water: MeshInstance3D = $"../Water"
 @onready var box: RigidBody3D = $"../box"
 @onready var object_splash: AudioStreamPlayer3D = $"../ObjectSplash"
+@onready var hurt_overlay: TextureRect = $HurtOverlay
+@onready var health_bar: ProgressBar = $HealthBar
+@onready var damage_sound: AudioStreamPlayer3D = $DamageSound
+
+var hurt_tween : Tween
 
 var picked_object
 var pull_power = 4
@@ -33,7 +38,7 @@ const sprinting_speed = 8.0
 const crouching_speed = 3.0
 var last_velocity = Vector3.ZERO
 var climbing_speed = 150.0
-var water_speed = 0.05
+var water_speed = 1.5
 var slide_timer = 0.0
 var slide_timer_max = 1.0
 var slide_vector = Vector2.ZERO
@@ -45,7 +50,7 @@ var crouching = false
 var free_looking = false
 var sliding = false
 var free_look_tilt_amount = 8.5
-const jump_velocity = 4.5
+const jump_velocity = 5
 var lerp_speed = 10.0
 var air_lerp_speed = 3.0
 const mouse_sens = 0.25
@@ -61,18 +66,60 @@ var head_bobbing_vector = Vector2.ZERO
 var head_bobbing_index = 0.0
 var head_bobbing_current_intensity = 0.0
 var water_entered = false
-var buoyancy_force = Vector3(0, 100, 0)  # Buoyancy force for the box
+var buoyancy_force = Vector3(0, 2000, 0)  # Buoyancy force for the box
 var water_surface_height = 0.0  # Height of the water's surface (you can adjust this depending on your scene)
 
 # Fall damage threshold (you can adjust this value)
-const FALL_DAMAGE_THRESHOLD = -13.0
+const FALL_DAMAGE_THRESHOLD = -12.0
+var health_regen_rate = 0.5 # Health restored per second
+var health_regen_timer = 0.0
+var max_health = 100.0
+var current_health = max_health 
+##Health variables
 
-##Fall damage
+
+
+## Fall damage
+
+##Swim variables
+var swim_speed = 4
+var swim_input = false
+
+##Handle wall ride
+@onready var wall_normal = Vector3()
+var direction_w = Vector3()
+var speed = 10
+var wallrunning = false
+var wall_run_timer: float = 0.0
+const max_wall_run_time: float = 1.5
+var wall_run_complete = false
+@onready var wall_run_bar: ProgressBar = $WallRunBar
+var wallrun_jump_force = 100.0  # Adjust this to control the strength of the jump off the wall
+var wallrun_jump_direction = Vector3()  # Direction for the wall jump
+
+
+##wall jump cooldown
+
+
+
+
+##water rise vars
+var rising_speed: float = 0.001
+var target_height: float = 10.0
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_cancel"):
+		$PauseMenu.pause()
+
 func _ready():
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
+	# Set the hurt_overlay to be invisible at the start
+	hurt_overlay.modulate = Color.TRANSPARENT
+	interaction.collision_mask = 2
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	water_surface_height = water.position.y
 	if box:
-		print(box.mass, "yeah")
+		
 		# Set water surface height (could be dynamic if the water moves up/down)
 		water_surface_height = water.position.y
 
@@ -96,6 +143,7 @@ func pick_object():
 	var collider = interaction.get_collider()
 	if collider != null and collider is RigidBody3D:
 		picked_object = collider
+		
 		joint.set_node_b(picked_object.get_path())
 		object_pickup.play()
 
@@ -110,6 +158,56 @@ func remove_object():
 		picked_object = null
 		joint.set_node_b(joint.get_path())
 
+
+		
+		
+func perform_wall_jump():
+	if wallrunning:
+		var wall_jump_direction = -wall_normal.normalized()	
+		velocity = wall_jump_direction * wallrun_jump_force
+		velocity.y = jump_velocity
+		
+		wallrunning = false
+		
+		wall_run_timer = 0.0
+		wall_run_bar.value = 0.0
+		
+		jumping.play()
+		animation_player.play("jump")
+		
+	else:
+		wall_run_complete = false
+		
+				
+					
+				
+func wall_run():
+	if wall_run_complete:
+		return
+		
+	if is_on_wall() and !is_on_floor() and Input.is_action_pressed("forward"):
+		if wall_run_timer <= max_wall_run_time:
+			velocity.y = 0
+			wallrunning = true
+			wall_run_timer += get_process_delta_time()
+			wall_run_bar.value = wall_run_timer / max_wall_run_time
+		else:
+			wallrunning = false
+			
+			
+			
+			wall_run_bar.value = 0.0
+	elif is_on_floor() and wall_run_complete:
+		
+		wallrunning = false
+		wall_run_timer = 0.0
+		wall_run_complete = false
+		wall_run_bar.value = 0.0
+	elif !is_on_wall():
+		
+		wall_run_complete = false
+		wall_run_timer = 0.0
+		wall_run_bar.value = 0.0
 func _input(event):
 	if Input.is_action_just_pressed("interact"):
 		if picked_object == null:
@@ -119,11 +217,11 @@ func _input(event):
 	if Input.is_action_pressed('rclick'):
 		locked = true
 		rotate_object(event)
-		print("Function being called", "Locked:", locked)
+		
 	if Input.is_action_just_released('rclick'):
 		locked = false
-		print("Function not called", locked)
 		
+	
 	if Input.is_action_just_pressed("throw"):
 		if picked_object != null:
 			var knockback = picked_object.global_position - global_position
@@ -140,9 +238,44 @@ func _input(event):
 		head.rotation.x = clamp(head.rotation.x, deg_to_rad(-89), deg_to_rad(89))
 
 func _physics_process(delta: float) -> void:
-	if water_entered:
-		current_speed = walking_speed
+	##Health regen logic
 	
+	
+	
+	if wallrunning and Input.is_action_just_pressed('jump'):
+		perform_wall_jump()
+	
+	health_regen_timer -= delta
+	
+	wall_run()
+	
+	if health_regen_timer <= 0.0 and current_health < max_health:
+		current_health += health_regen_rate
+		
+		health_bar.value = current_health
+		health_regen_timer = 1.0
+	
+	
+	# Add water damage logic here
+	var water_damage_timer : float = 0.0
+	var water_damage_interval : float = 1.0  # Damage interval in seconds
+	##player height
+	var player_height = global_position.y
+	
+	
+	if water_entered:
+		
+		
+			
+		current_speed = water_speed
+		water_damage_timer -= delta  # Decrease the timer
+
+		# Apply damage every 'water_damage_interval' seconds
+		if water_damage_timer <= 0:
+			hurt(0.05)  # Call the hurt function to apply 20 damage
+			water_damage_timer = water_damage_interval  # Reset the timer
+	
+	# Handle crouch, sprint, walk, etc. as usual
 	var input_dir := Input.get_vector("left", "right", "forward", "backward")
 	var is_moving = input_dir != Vector2.ZERO || velocity.length() > 0.1
 	
@@ -157,7 +290,7 @@ func _physics_process(delta: float) -> void:
 			slide_timer = slide_timer_max
 			slide_vector = input_dir
 			free_looking = true
-			print("Sliding Enabled")
+			
 		
 		walking = false
 		sprinting = false
@@ -200,7 +333,7 @@ func _physics_process(delta: float) -> void:
 		slide_timer -= delta
 		if slide_timer <= 0:
 			sliding = false
-			print("Sliding Disabled")
+			
 			slide.stop()
 			free_looking = false
 			played_sound = false
@@ -231,35 +364,34 @@ func _physics_process(delta: float) -> void:
 	
 	if not is_on_floor():
 		velocity += get_gravity() * delta
-		
 
-	# Handle jump.
+	# Handle jump
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
+		
 		velocity.y = jump_velocity
+		print(velocity.y)
 		sliding = false
 		animation_player.play("jump")
 		jumping.play()
-	
+
 	# Handle landing and fall damage
 	if is_on_floor():
 		if last_velocity.y < 0.0:
-			# Fall damage logic
-			print(last_velocity.y, "This is the last velocity")
 			if last_velocity.y < FALL_DAMAGE_THRESHOLD:
 				
-				print("Taking damage")  # Print fall damage message
+				hurt(20)  # Call the hurt function to make the overlay visible
 			landing.play()
 			animation_player.play("landing")
-			print(last_velocity.y)
 			if jumping.playing:
 				jumping.stop()
-	
-	# Get the input direction and handle the movement/deceleration.
+
+	# Get the input direction and handle the movement/deceleration
 	if is_on_floor():
 		direction = lerp(direction, (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized(), delta*lerp_speed)
 	else:
 		if input_dir != Vector2.ZERO:
 			direction = lerp(direction, (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized(), delta*air_lerp_speed)
+	
 	if sliding:
 		direction = (transform.basis * Vector3(slide_vector.x, 0, slide_vector.y)).normalized()
 		current_speed = (slide_timer + 0.1) * slide_speed
@@ -277,12 +409,43 @@ func _physics_process(delta: float) -> void:
 		picked_object.set_linear_velocity((b-a)*pull_power)
 	
 	last_velocity = velocity
+	
+	if player_height < water_surface_height:
+		
+		water_entered = true
+	else:
+		water_entered = false
+	
+	if Input.is_action_pressed("swim") and water_entered:
+		
+		hurt(0.9)
+		
+		velocity.y = swim_speed
+	elif water_entered and !Input.is_action_pressed("swim"):
+		velocity.y = -1
+	
+	
 	move_and_slide()
+
+# Hurt function to handle the hurt_overlay visibility
+func hurt(damage : float):
+	damage_sound.play()
+	current_health -= damage
+	health_bar.value = current_health
+	
+	
+	hurt_overlay.modulate = Color.WHITE
+	if hurt_tween:
+		hurt_tween.kill()
+	hurt_tween = create_tween()
+	hurt_tween.tween_property(hurt_overlay, "modulate", Color.TRANSPARENT, 0.5)
+	
+
 
 # Handle water entry
 func _on_sound_detection_body_entered(body: Node3D) -> void:
 	if body == box:
-		print("Box entered water!")
+		print("Box entered the water")
 		object_splash.play()
 		if body is RigidBody3D:
 			body.gravity_scale = 0  # Disable gravity while it's underwater
@@ -290,8 +453,12 @@ func _on_sound_detection_body_entered(body: Node3D) -> void:
 
 	if body.name == "player":
 		water_entered = true
+		object_splash.play()
 		current_speed = water_speed
-		print(current_speed, "This is the water speed")
+		
+func _on_water_surface_changed(new_height: float):
+	water_surface_height = new_height
+	print("Updated", water_surface_height)
 
 # Handle water exit
 func _on_sound_detection_body_exited(body: Node3D) -> void:
@@ -299,9 +466,25 @@ func _on_sound_detection_body_exited(body: Node3D) -> void:
 		print("Box exited water!")
 		if body is RigidBody3D:
 			body.gravity_scale = 1  # Restore gravity when it exits the water
-			body.apply_impulse(Vector3.ZERO, Vector3(0, -100, 0))  # Small downward force if needed
+			body.apply_impulse(Vector3.ZERO, Vector3(0, -20, 0))  # Small downward force if needed
 
 	if body.name == "player":
 		water_entered = false
 		current_speed = walking_speed
 		print("Restored speed", current_speed)
+
+
+func rise_water() -> void:
+	print("water is now rising")
+	while water.position.y < target_height:
+		water.position.y += rising_speed
+		water_surface_height = water.position.y
+		
+		await get_tree().create_timer(0.0).timeout
+
+func _on_particle_detection_body_entered(body: Node3D) -> void:
+	if body.name == "player":
+		print("player entered sphere")
+		rise_water()
+	elif body.name == "box":
+		print("box entered sphere")
