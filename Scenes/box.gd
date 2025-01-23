@@ -2,6 +2,7 @@ extends RigidBody3D
 
 var velocity = 3
 
+@onready var box: RigidBody3D = $"."
 
 
 @onready var box_impact: AudioStreamPlayer3D = $BoxImpact

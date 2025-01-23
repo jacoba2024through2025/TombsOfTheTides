@@ -1,4 +1,5 @@
 extends CharacterBody3D
+@onready var player: CharacterBody3D = $"."
 
 @onready var nek: Node3D = $nek
 @onready var camera_3d: Camera3D = $nek/head/eyes/Camera3D
@@ -99,13 +100,25 @@ var wallrun_jump_direction = Vector3()  # Direction for the wall jump
 
 
 ##wall jump cooldown
-
-
+var wall_jump_count = 0
+var wall_jump_cooldown = 10.0
+var can_wall_jump = true
+var cooldown_timer
+@onready var wall_jump_bar: ProgressBar = $WallJumpBar
+var wall_jump_regeneration_timer: float = 0.0  
+var wall_jump_regeneration_interval: float = 1.0  
 
 
 ##water rise vars
 var rising_speed: float = 0.001
 var target_height: float = 10.0
+
+
+##box timer
+var box_timer = 0.0
+var box_has_touched = false
+var box_time = 5.0
+
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
@@ -117,12 +130,15 @@ func _ready():
 	hurt_overlay.modulate = Color.TRANSPARENT
 	interaction.collision_mask = 2
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+
 	water_surface_height = water.position.y
 	if box:
 		
 		# Set water surface height (could be dynamic if the water moves up/down)
 		water_surface_height = water.position.y
-
+	
+	wall_jump_count = 9
+	wall_jump_bar.value = wall_jump_count
 func _play_footstep_audio():
 	if water_entered:
 		if !water_sound.playing:
@@ -138,7 +154,12 @@ func _play_footstep_audio():
 		else:
 			footstep.pitch_scale = randf_range(0.5, 0.7)
 			footstep.play()
-
+func _process(delta: float) -> void:
+	var look_direction = -camera_3d.global_transform.basis.z
+	
+	look_direction = look_direction.normalized()
+	
+	#print("Player is looking", look_direction)
 func pick_object():
 	var collider = interaction.get_collider()
 	if collider != null and collider is RigidBody3D:
@@ -162,22 +183,27 @@ func remove_object():
 		
 		
 func perform_wall_jump():
-	if wallrunning:
-		var wall_jump_direction = -wall_normal.normalized()	
-		velocity = wall_jump_direction * wallrun_jump_force
-		velocity.y = jump_velocity
-		
-		wallrunning = false
-		
-		wall_run_timer = 0.0
-		wall_run_bar.value = 0.0
-		
-		jumping.play()
-		animation_player.play("jump")
-		
-	else:
-		wall_run_complete = false
-		
+	if can_wall_jump and wall_jump_count > 0:
+		if wallrunning:
+			var wall_jump_direction = -wall_normal.normalized()	
+			velocity = wall_jump_direction * wallrun_jump_force
+			velocity.y = jump_velocity
+			
+			wallrunning = false
+			
+			wall_run_timer = 0.0
+			wall_run_bar.value = 0.0
+			wall_jump_count -= 1
+			wall_jump_bar.value = wall_jump_count
+			jumping.play()
+			animation_player.play("jump")
+			
+		else:
+			wall_run_complete = false
+	elif wall_jump_count <= 0:
+		can_wall_jump = false
+		cooldown_timer = wall_jump_cooldown
+		print("Wait 3 seconds")
 				
 					
 				
@@ -239,8 +265,20 @@ func _input(event):
 
 func _physics_process(delta: float) -> void:
 	##Health regen logic
+	if !can_wall_jump:
+		cooldown_timer -= delta
+		if cooldown_timer <= 0:
+			can_wall_jump = true
+			wall_jump_count = 9
+			wall_jump_bar.value = wall_jump_count
+			print("cooldown finished jump again")
 	
-	
+	if wall_jump_count < 9:
+		wall_jump_regeneration_timer += delta
+		if wall_jump_regeneration_timer >= wall_jump_regeneration_interval:
+			wall_jump_count += 0.2
+			wall_jump_bar.value = wall_jump_count
+			wall_jump_regeneration_timer = 0.0
 	
 	if wallrunning and Input.is_action_just_pressed('jump'):
 		perform_wall_jump()
@@ -272,7 +310,7 @@ func _physics_process(delta: float) -> void:
 
 		# Apply damage every 'water_damage_interval' seconds
 		if water_damage_timer <= 0:
-			hurt(0.05)  # Call the hurt function to apply 20 damage
+			hurt(0.2)  # Call the hurt function to apply 20 damage
 			water_damage_timer = water_damage_interval  # Reset the timer
 	
 	# Handle crouch, sprint, walk, etc. as usual
@@ -369,7 +407,7 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
 		
 		velocity.y = jump_velocity
-		print(velocity.y)
+		
 		sliding = false
 		animation_player.play("jump")
 		jumping.play()
@@ -418,7 +456,7 @@ func _physics_process(delta: float) -> void:
 	
 	if Input.is_action_pressed("swim") and water_entered:
 		
-		hurt(0.9)
+		hurt(0.8)
 		
 		velocity.y = swim_speed
 	elif water_entered and !Input.is_action_pressed("swim"):
@@ -433,6 +471,8 @@ func hurt(damage : float):
 	current_health -= damage
 	health_bar.value = current_health
 	
+	if health_bar.value <= 0:
+		get_tree().reload_current_scene()
 	
 	hurt_overlay.modulate = Color.WHITE
 	if hurt_tween:
@@ -445,7 +485,7 @@ func hurt(damage : float):
 # Handle water entry
 func _on_sound_detection_body_entered(body: Node3D) -> void:
 	if body == box:
-		print("Box entered the water")
+		
 		object_splash.play()
 		if body is RigidBody3D:
 			body.gravity_scale = 0  # Disable gravity while it's underwater
@@ -458,12 +498,12 @@ func _on_sound_detection_body_entered(body: Node3D) -> void:
 		
 func _on_water_surface_changed(new_height: float):
 	water_surface_height = new_height
-	print("Updated", water_surface_height)
+	
 
 # Handle water exit
 func _on_sound_detection_body_exited(body: Node3D) -> void:
 	if body == box:
-		print("Box exited water!")
+		
 		if body is RigidBody3D:
 			body.gravity_scale = 1  # Restore gravity when it exits the water
 			body.apply_impulse(Vector3.ZERO, Vector3(0, -20, 0))  # Small downward force if needed
@@ -471,11 +511,11 @@ func _on_sound_detection_body_exited(body: Node3D) -> void:
 	if body.name == "player":
 		water_entered = false
 		current_speed = walking_speed
-		print("Restored speed", current_speed)
+		
 
 
 func rise_water() -> void:
-	print("water is now rising")
+	
 	while water.position.y < target_height:
 		water.position.y += rising_speed
 		water_surface_height = water.position.y
@@ -484,7 +524,45 @@ func rise_water() -> void:
 
 func _on_particle_detection_body_entered(body: Node3D) -> void:
 	if body.name == "player":
-		print("player entered sphere")
+		
 		rise_water()
 	elif body.name == "box":
 		print("box entered sphere")
+
+
+
+
+
+func _on_area_3d_body_entered(body: Node3D) -> void:
+	if body.name == "box":
+		var look_direction = -camera_3d.global_transform.basis.z
+		
+		
+		if look_direction.y < 0:
+			if picked_object == body:
+				print("Object fallen")
+				remove_object()
+		
+		
+		body.set_collision_layer_value(1, true)
+		body.set_collision_layer_value(2, true)
+		box_has_touched = true
+		body.set_collision_mask_value(1, true)
+		
+#func _process(delta: float) -> void:
+	#if box_has_touched:
+		#box_timer += delta
+		#if box_timer >= box_time:
+			#timer_end() 		
+#
+#func timer_end():
+	#print("timer reset")
+	#box_has_touched = false
+	#box_timer = 0.0
+#
+func _on_area_3d_body_exited(body: Node3D) -> void:
+	if body.name == "box":
+		body.set_collision_layer_value(1, false)
+		body.set_collision_layer_value(2, true)
+		box_has_touched = false
+		body.set_collision_mask_value(1, true)

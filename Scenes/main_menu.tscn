@@ -1,11 +1,14 @@
-[gd_scene load_steps=25 format=3 uid="uid://sucxe3px6gj3"]
+[gd_scene load_steps=29 format=3 uid="uid://sucxe3px6gj3"]
 
 [ext_resource type="Texture2D" uid="uid://ckrsj5go8ckwh" path="res://assets/textures/dev/grids/Dark/texture_07.png" id="1_0gx5a"]
 [ext_resource type="Script" path="res://Scenes/main_menu.gd" id="1_tg5yt"]
 [ext_resource type="Texture2D" uid="uid://dw5jd84o6801p" path="res://assets/hdris/kloofendal_48d_partly_cloudy_puresky_2k.hdr" id="2_6den5"]
 [ext_resource type="Script" path="res://Scenes/menu.gd" id="9_0nyax"]
 [ext_resource type="AudioStream" uid="uid://c2kciax0y82ea" path="res://sound effects/music/Tomb of Tides Start Menu.wav" id="10_45v17"]
+[ext_resource type="AudioStream" uid="uid://gk8vnadl57jy" path="res://sound effects/UI SFX/select_007.ogg" id="10_y0tyn"]
+[ext_resource type="AudioStream" uid="uid://jrikuxdh8hko" path="res://sound effects/UI SFX/click_001.ogg" id="11_ldjg7"]
 [ext_resource type="Script" path="res://scenes/box.gd" id="13_2vc8p"]
+[ext_resource type="PackedScene" uid="uid://1ltnvm8yaidi" path="res://scenes/input_settings.tscn" id="13_l74hr"]
 [ext_resource type="AudioStream" uid="uid://dwpqu5ibm67tm" path="res://sound effects/WoodLogHandling1.wav" id="14_os1ne"]
 [ext_resource type="Script" path="res://scenes/water.gd" id="15_dd3ge"]
 [ext_resource type="AudioStream" uid="uid://bycd4qj6hl0i2" path="res://sound effects/CoastalWavesOnRocksLoop.wav" id="16_3gj7a"]
@@ -167,6 +170,9 @@ material = SubResource("ShaderMaterial_kox3b")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_tjkvi"]
 
+[sub_resource type="SystemFont" id="SystemFont_6q3sw"]
+font_names = PackedStringArray("Black Ops One")
+
 [node name="world" type="Node3D"]
 script = ExtResource("1_tg5yt")
 
@@ -312,12 +318,19 @@ script = ExtResource("9_0nyax")
 [node name="NewGameButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 40
-text = "New Game"
+text = "Play Game"
+
+[node name="Click" type="AudioStreamPlayer3D" parent="VBoxContainer/NewGameButton"]
+stream = ExtResource("10_y0tyn")
+volume_db = 15.0
+
+[node name="Hover" type="AudioStreamPlayer3D" parent="VBoxContainer/NewGameButton"]
+stream = ExtResource("11_ldjg7")
 
 [node name="LoadButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 40
-text = "View Controls"
+text = "Controls/Keybinds"
 
 [node name="QuitButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
@@ -333,7 +346,30 @@ transform = Transform3D(-0.34937, -0.233615, 0.907394, -0.0839409, 0.972329, 0.2
 stream = ExtResource("10_45v17")
 volume_db = 4.76
 
+[node name="Label" type="Label" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -386.0
+offset_top = 65.0
+offset_right = 386.0
+offset_bottom = 166.0
+grow_horizontal = 2
+theme_override_constants/outline_size = 31
+theme_override_fonts/font = SubResource("SystemFont_6q3sw")
+theme_override_font_sizes/font_size = 80
+text = "Tomb Of The Tides"
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="InputSettings" parent="CanvasLayer" instance=ExtResource("13_l74hr")]
+visible = false
+
 [connection signal="body_entered" from="box" to="box" method="_on_body_entered"]
 [connection signal="finished" from="box/BoxImpact" to="box" method="_on_box_impact_finished"]
+[connection signal="mouse_entered" from="VBoxContainer/NewGameButton" to="VBoxContainer" method="_on_new_game_button_mouse_entered"]
 [connection signal="pressed" from="VBoxContainer/NewGameButton" to="VBoxContainer" method="_on_new_game_button_pressed"]
+[connection signal="mouse_entered" from="VBoxContainer/LoadButton" to="VBoxContainer" method="_on_load_button_mouse_entered"]
+[connection signal="pressed" from="VBoxContainer/LoadButton" to="VBoxContainer" method="_on_load_button_pressed"]
+[connection signal="mouse_entered" from="VBoxContainer/QuitButton" to="VBoxContainer" method="_on_quit_button_mouse_entered"]
 [connection signal="pressed" from="VBoxContainer/QuitButton" to="VBoxContainer" method="_on_quit_button_pressed"]

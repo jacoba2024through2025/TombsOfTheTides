@@ -1,4 +1,4 @@
-[gd_scene load_steps=54 format=3 uid="uid://k1nf1dhueuvi"]
+[gd_scene load_steps=57 format=3 uid="uid://k1nf1dhueuvi"]
 
 [ext_resource type="Texture2D" uid="uid://ckrsj5go8ckwh" path="res://assets/textures/dev/grids/Dark/texture_07.png" id="1_1ox7n"]
 [ext_resource type="Script" path="res://Scenes/main.gd" id="1_6kpv3"]
@@ -144,6 +144,15 @@ bg_color = Color(0.133333, 0.133333, 0.133333, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_japrs"]
 bg_color = Color(0, 0, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ly1h0"]
+bg_color = Color(0.133333, 0.133333, 0.133333, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ma3i3"]
+bg_color = Color(1, 1, 0, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_a32se"]
+size = Vector3(0.168336, 0.789988, 0.001)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xpugk"]
 albedo_color = Color(1, 0.647059, 0, 1)
@@ -338,6 +347,7 @@ script = ExtResource("1_6kpv3")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="stage"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.56878, -0.5, -0.0127044)
+layers = 3
 use_collision = true
 collision_layer = 3
 collision_mask = 3
@@ -481,11 +491,11 @@ size = Vector3(3.40179, 0.563843, 19.0319)
 material = SubResource("StandardMaterial3D_dvn77")
 
 [node name="CSGBox3D25" type="CSGBox3D" parent="stage"]
-transform = Transform3D(2.77556e-17, -4.47035e-08, 1, 2.83114e-09, -1, -8.9407e-08, 0.0323845, 8.74228e-08, 9.42489e-17, -26.381, 6.63013, 0.327345)
+transform = Transform3D(2.77556e-17, -4.47035e-08, 1, 2.83114e-09, -1, -8.9407e-08, 0.0323845, 8.74228e-08, 9.42489e-17, -25.5285, 6.94434, 0.327345)
 use_collision = true
 collision_layer = 3
 collision_mask = 3
-size = Vector3(3.40179, 3, 11)
+size = Vector3(3.40179, 3.62842, 12.7051)
 material = SubResource("StandardMaterial3D_dvn77")
 
 [node name="CSGBox3D21" type="CSGBox3D" parent="stage"]
@@ -546,7 +556,6 @@ transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -
 shadow_enabled = true
 
 [node name="player" type="CharacterBody3D" parent="."]
-collision_layer = 3
 script = ExtResource("3_kogik")
 
 [node name="standing_collision_shape" type="CollisionShape3D" parent="player"]
@@ -648,10 +657,33 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_japrs")
 max_value = 1.0
 value = 1.0
 
-[node name="box" type="RigidBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.50765, 0.639908, -0.153813)
-collision_layer = 2
+[node name="WallJumpBar" type="ProgressBar" parent="player"]
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 3.0
+offset_top = 123.0
+offset_right = 420.0
+offset_bottom = 173.0
+grow_vertical = 2
+rotation = -1.57025
+theme_override_styles/background = SubResource("StyleBoxFlat_ly1h0")
+theme_override_styles/fill = SubResource("StyleBoxFlat_ma3i3")
+max_value = 9.0
+metadata/_edit_group_ = true
+
+[node name="Area3D" type="Area3D" parent="player"]
+transform = Transform3D(1.31791, 0, 0, 0, 0.94235, 0, 0, 0, 5.39817, -0.263603, -0.0293754, 0.0585302)
+collision_layer = 3
 collision_mask = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="player/Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.308443, -0.315429, -0.0625275)
+shape = SubResource("BoxShape3D_a32se")
+
+[node name="box" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.50765, 6.11277, -0.153813)
+collision_layer = 2
 contact_monitor = true
 max_contacts_reported = 1
 script = ExtResource("10_pqk1r")
@@ -734,7 +766,10 @@ shape = SubResource("SphereShape3D_rdh8d")
 
 [node name="PauseMenu" parent="." instance=ExtResource("22_tiefe")]
 
+[connection signal="body_entered" from="player/Area3D" to="player" method="_on_area_3d_body_entered"]
+[connection signal="body_exited" from="player/Area3D" to="player" method="_on_area_3d_body_exited"]
 [connection signal="body_entered" from="box" to="box" method="_on_body_entered"]
+[connection signal="body_exited" from="box" to="player" method="_on_box_body_exited"]
 [connection signal="finished" from="box/BoxImpact" to="box" method="_on_box_impact_finished"]
 [connection signal="body_entered" from="Water/Sound Detection" to="player" method="_on_sound_detection_body_entered"]
 [connection signal="body_exited" from="Water/Sound Detection" to="player" method="_on_sound_detection_body_exited"]
