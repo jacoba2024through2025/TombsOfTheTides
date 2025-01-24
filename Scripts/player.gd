@@ -67,7 +67,7 @@ var head_bobbing_vector = Vector2.ZERO
 var head_bobbing_index = 0.0
 var head_bobbing_current_intensity = 0.0
 var water_entered = false
-var buoyancy_force = Vector3(0, 2000, 0)  # Buoyancy force for the box
+var buoyancy_force = Vector3(0, 5000, 0)  # Buoyancy force for the box
 var water_surface_height = 0.0  # Height of the water's surface (you can adjust this depending on your scene)
 
 # Fall damage threshold (you can adjust this value)
@@ -125,7 +125,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		$PauseMenu.pause()
 
 func _ready():
-	
+	box.connect("bodycollided", Callable(player, "_on_body_collided"))
 	# Set the hurt_overlay to be invisible at the start
 	hurt_overlay.modulate = Color.TRANSPARENT
 	interaction.collision_mask = 2
@@ -164,6 +164,8 @@ func pick_object():
 	var collider = interaction.get_collider()
 	if collider != null and collider is RigidBody3D:
 		picked_object = collider
+		
+		
 		
 		joint.set_node_b(picked_object.get_path())
 		object_pickup.play()
@@ -237,8 +239,12 @@ func wall_run():
 func _input(event):
 	if Input.is_action_just_pressed("interact"):
 		if picked_object == null:
+			
 			pick_object()
 		elif picked_object != null:
+			remove_object()
+		elif picked_object != null and is_on_wall():
+			print("object collided")
 			remove_object()
 	if Input.is_action_pressed('rclick'):
 		locked = true
@@ -416,8 +422,16 @@ func _physics_process(delta: float) -> void:
 	if is_on_floor():
 		if last_velocity.y < 0.0:
 			if last_velocity.y < FALL_DAMAGE_THRESHOLD:
-				
-				hurt(20)  # Call the hurt function to make the overlay visible
+				print(last_velocity.y)
+				if last_velocity.y > -15:
+					
+					print(last_velocity.y, "taken less")
+					hurt(20)  
+				elif velocity.y < -15:
+					hurt(45)
+				elif last_velocity.y < -20:
+					print(last_velocity.y, "taken more")
+					hurt(75)
 			landing.play()
 			animation_player.play("landing")
 			if jumping.playing:
@@ -538,11 +552,14 @@ func _on_area_3d_body_entered(body: Node3D) -> void:
 		var look_direction = -camera_3d.global_transform.basis.z
 		
 		
-		if look_direction.y < 0:
-			if picked_object == body:
-				print("Object fallen")
-				remove_object()
 		
+		#if look_direction.y < 0 || look_direction.x < 0:
+		if look_direction.x < 0 || look_direction.x < 1 || look_direction.y < 0 || look_direction.z < 0 || look_direction.z < 1:
+			if picked_object == body:
+				
+				
+				remove_object()
+			
 		
 		body.set_collision_layer_value(1, true)
 		body.set_collision_layer_value(2, true)
@@ -566,3 +583,6 @@ func _on_area_3d_body_exited(body: Node3D) -> void:
 		body.set_collision_layer_value(2, true)
 		box_has_touched = false
 		body.set_collision_mask_value(1, true)
+
+func _on_body_collided(body):
+	remove_object()
