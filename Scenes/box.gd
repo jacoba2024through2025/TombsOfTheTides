@@ -22,7 +22,7 @@ func _physics_process(delta: float) -> void:
 	apply_impulse(Vector3.ZERO, Vector3(10,0,0))
 	
 	
-	move_and_collide(Vector3(0, -3, 0))
+	
 	
 			
 

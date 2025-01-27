@@ -501,7 +501,7 @@ func _physics_process(delta: float) -> void:
 	for i in get_slide_collision_count():
 		var c = get_slide_collision(i)
 		if c.get_collider() is RigidBody3D:
-			print("wall resistance")
+			
 			c.get_collider().apply_central_impulse(-c.get_normal() * push_force)
 # Hurt function to handle the hurt_overlay visibility
 func hurt(damage : float):
