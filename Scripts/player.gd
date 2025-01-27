@@ -86,6 +86,10 @@ var current_health = max_health
 var swim_speed = 4
 var swim_input = false
 
+
+###handle box force
+var push_force = 3.0
+
 ##Handle wall ride
 @onready var wall_normal = Vector3()
 var direction_w = Vector3()
@@ -120,9 +124,12 @@ var box_has_touched = false
 var box_time = 5.0
 
 
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
 		$PauseMenu.pause()
+
+
 
 func _ready():
 	box.connect("bodycollided", Callable(player, "_on_body_collided"))
@@ -159,7 +166,7 @@ func _process(delta: float) -> void:
 	
 	look_direction = look_direction.normalized()
 	
-	#print("Player is looking", look_direction)
+	
 func pick_object():
 	var collider = interaction.get_collider()
 	if collider != null and collider is RigidBody3D:
@@ -178,9 +185,13 @@ func rotate_object(event):
 
 func remove_object():
 	if picked_object != null:
+		
+		picked_object.linear_velocity = Vector3.ZERO
+		picked_object.angular_velocity = Vector3.ZERO
 		picked_object = null
+		
 		joint.set_node_b(joint.get_path())
-
+		
 
 		
 		
@@ -254,12 +265,7 @@ func _input(event):
 		locked = false
 		
 	
-	if Input.is_action_just_pressed("throw"):
-		if picked_object != null:
-			var knockback = picked_object.global_position - global_position
-			picked_object.apply_central_impulse(knockback * 5)
-			object_throw.play()
-			remove_object()
+	
 	if event is InputEventMouseMotion:
 		if free_looking:
 			nek.rotate_y(deg_to_rad(-event.relative.x * mouse_sens))
@@ -270,6 +276,19 @@ func _input(event):
 		head.rotation.x = clamp(head.rotation.x, deg_to_rad(-89), deg_to_rad(89))
 
 func _physics_process(delta: float) -> void:
+	if picked_object != null:
+		var camera_position = camera_3d.global_transform.origin
+		var camera_direction = -camera_3d.global_transform.basis.z
+		
+		var distance = 2.5
+		var target_position = camera_position + camera_direction * distance
+		
+		var vertical_offset = 1
+		target_position.y -= vertical_offset
+		
+		
+		picked_object.global_transform.origin = target_position
+		picked_object.global_transform.basis = camera_3d.global_transform.basis
 	##Health regen logic
 	if !can_wall_jump:
 		cooldown_timer -= delta
@@ -478,7 +497,12 @@ func _physics_process(delta: float) -> void:
 	
 	
 	move_and_slide()
-
+	
+	for i in get_slide_collision_count():
+		var c = get_slide_collision(i)
+		if c.get_collider() is RigidBody3D:
+			print("wall resistance")
+			c.get_collider().apply_central_impulse(-c.get_normal() * push_force)
 # Hurt function to handle the hurt_overlay visibility
 func hurt(damage : float):
 	damage_sound.play()
@@ -548,17 +572,18 @@ func _on_particle_detection_body_entered(body: Node3D) -> void:
 
 
 func _on_area_3d_body_entered(body: Node3D) -> void:
+	
 	if body.name == "box":
 		var look_direction = -camera_3d.global_transform.basis.z
+		var looking_down = look_direction.y < 0
 		
-		
-		
-		#if look_direction.y < 0 || look_direction.x < 0:
-		if look_direction.x < 0 || look_direction.x < 1 || look_direction.y < 0 || look_direction.z < 0 || look_direction.z < 1:
+		if looking_down and !is_on_floor():
 			if picked_object == body:
-				
-				
+				print("removing object!", look_direction.y)
 				remove_object()
+		
+		
+		
 			
 		
 		body.set_collision_layer_value(1, true)
@@ -585,4 +610,4 @@ func _on_area_3d_body_exited(body: Node3D) -> void:
 		body.set_collision_mask_value(1, true)
 
 func _on_body_collided(body):
-	remove_object()
+	pass

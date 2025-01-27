@@ -15,7 +15,7 @@ func _ready():
 		config.set_value("keybinding", "free_look", "Alt")
 		config.set_value("keybinding", "interact", "E")
 		config.set_value("keybinding", "rclick", "mouse_2")
-		config.set_value("keybinding", "throw", "F")
+		
 		config.set_value("keybinding", "swim", "Space")
 		config.set_value("keybinding", "jump", "Space")
 		

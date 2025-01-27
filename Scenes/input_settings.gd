@@ -17,7 +17,7 @@ var input_actions = {
 	"free_look": "Free look",
 	"interact": "Interact",
 	"rclick": "Rclick",
-	"throw": "Throw",
+	
 	"swim": "Swim",
 	"jump": "Jump"
 }
