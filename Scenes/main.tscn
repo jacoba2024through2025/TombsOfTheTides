@@ -1,9 +1,10 @@
-[gd_scene load_steps=58 format=3 uid="uid://k1nf1dhueuvi"]
+[gd_scene load_steps=64 format=3 uid="uid://k1nf1dhueuvi"]
 
 [ext_resource type="Texture2D" uid="uid://ckrsj5go8ckwh" path="res://assets/textures/dev/grids/Dark/texture_07.png" id="1_1ox7n"]
 [ext_resource type="Script" path="res://Scenes/main.gd" id="1_6kpv3"]
 [ext_resource type="Texture2D" uid="uid://dw5jd84o6801p" path="res://assets/hdris/kloofendal_48d_partly_cloudy_puresky_2k.hdr" id="2_sg6od"]
 [ext_resource type="Script" path="res://scripts/player.gd" id="3_kogik"]
+[ext_resource type="Texture2D" uid="uid://cx0jhmhxhpmgy" path="res://assets/textures/dev/grids/Orange/texture_05.png" id="3_m0blq"]
 [ext_resource type="AudioStream" uid="uid://ccolx0f63u8ng" path="res://sound effects/FootstepsConcrete2.wav" id="4_474qq"]
 [ext_resource type="AudioStream" uid="uid://dgopdfvvmgjya" path="res://sound effects/HumanInjured5.wav" id="5_1c2xu"]
 [ext_resource type="AudioStream" uid="uid://dyupgtipuxmbf" path="res://sound effects/FootstepsStoneDirt4.wav" id="6_oan3t"]
@@ -22,10 +23,17 @@
 [ext_resource type="AudioStream" uid="uid://dfyxkoatqbjd5" path="res://sound effects/music/Tomb of Tides In Game.wav" id="20_do3yu"]
 [ext_resource type="Script" path="res://Scenes/spinning_sphere.gd" id="21_2legu"]
 [ext_resource type="PackedScene" uid="uid://bxlvmfpioparp" path="res://pause_menu.tscn" id="22_tiefe"]
+[ext_resource type="PackedScene" uid="uid://x4xnc85khpl5" path="res://scenes/path_3d_rope.tscn" id="24_n7x4s"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dvn77"]
 albedo_texture = ExtResource("1_1ox7n")
 uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h8owr"]
+albedo_texture = ExtResource("3_m0blq")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_oh4ee"]
+size = Vector3(0.053833, 3, 3.3284)
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_k5mh5"]
 panorama = ExtResource("2_sg6od")
@@ -153,6 +161,8 @@ bg_color = Color(1, 1, 0, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_a32se"]
 size = Vector3(0.168336, 0.789988, 0.001)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_y0lgl"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_qqub3"]
 friction = 0.7
@@ -344,18 +354,27 @@ script/source = "extends Area3D
 [sub_resource type="SphereShape3D" id="SphereShape3D_rdh8d"]
 radius = 2.54085
 
+[sub_resource type="Curve3D" id="Curve3D_ngv02"]
+resource_local_to_scene = true
+bake_interval = 512.0
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5),
+"tilts": PackedFloat32Array(0, 0)
+}
+point_count = 2
+
 [node name="world" type="Node3D"]
 script = ExtResource("1_6kpv3")
 
 [node name="stage" type="Node3D" parent="."]
 
 [node name="floor2" type="CSGBox3D" parent="stage" groups=["wallsFloorsCeilings"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.56878, -0.5, -0.0127044)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.04693, -0.5, 0.487296)
 layers = 3
 use_collision = true
 collision_layer = 3
 collision_mask = 3
-size = Vector3(35.146, 1, 20)
+size = Vector3(32.1023, 1, 21)
 material = SubResource("StandardMaterial3D_dvn77")
 
 [node name="floor" type="CSGBox3D" parent="stage"]
@@ -375,19 +394,19 @@ size = Vector3(20, 1, 20)
 material = SubResource("StandardMaterial3D_dvn77")
 
 [node name="floor3" type="CSGBox3D" parent="stage"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -39.2858, -1.01863, 0.326804)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -41.0753, -1.01863, 0.326804)
 use_collision = true
 collision_layer = 3
 collision_mask = 3
-size = Vector3(16.6307, 1, 8.47211)
+size = Vector3(13.0517, 1, 8.47211)
 material = SubResource("StandardMaterial3D_dvn77")
 
 [node name="platform" type="CSGBox3D" parent="stage"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40.1012, 2.32148, 0.323378)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40.1012, 2.32148, 0.719279)
 use_collision = true
 collision_layer = 3
 collision_mask = 3
-size = Vector3(5, 2.89441, 19.4082)
+size = Vector3(5, 2.89441, 20.2)
 material = SubResource("StandardMaterial3D_dvn77")
 
 [node name="floor4" type="CSGBox3D" parent="stage"]
@@ -423,27 +442,67 @@ size = Vector3(3.11816, 1, 3.27667)
 material = SubResource("StandardMaterial3D_dvn77")
 
 [node name="floor8" type="CSGBox3D" parent="stage"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40.2331, 6.10812, -1.40243)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40.2331, 6.90812, -1.40243)
 use_collision = true
 collision_layer = 3
 collision_mask = 3
-size = Vector3(3.11816, 1, 16.9918)
+size = Vector3(3.11816, 2.6, 16.9918)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="floor11" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -43.074, 3.70812, 8.09347)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(0.8, 0.2, 3.6)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="floor12" type="CSGBox3D" parent="stage"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -40.474, 7.44249, 7.69347)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(0.8, 0.2, 3.6)
 material = SubResource("StandardMaterial3D_dvn77")
 
 [node name="wall2" type="CSGBox3D" parent="stage" groups=["wallsFloorsCeilings"]]
-transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -42.3088, 7.1882, -1.40243)
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -42.26, 8.29698, -1.40243)
 use_collision = true
 collision_layer = 3
 collision_mask = 3
-size = Vector3(3.11816, 1, 16.9918)
+size = Vector3(5.4, 1.09766, 16.9918)
 material = SubResource("StandardMaterial3D_dvn77")
 
 [node name="wall3" type="CSGBox3D" parent="stage" groups=["wallsFloorsCeilings"]]
-transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -38.1852, 7.1882, 0.455243)
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -38.1852, 8.32912, 0.455243)
 use_collision = true
 collision_layer = 3
 collision_mask = 3
-size = Vector3(3.11816, 1, 13.3034)
+size = Vector3(5.4, 1, 13.3034)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="wall15" type="CSGBox3D" parent="stage" groups=["wallsFloorsCeilings"]]
+transform = Transform3D(1.91069e-15, 4.37114e-08, 1, 1, -4.37114e-08, 0, 4.37114e-08, 1, -4.37114e-08, -40.1369, 6.19546, 7.25524)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(5.13268, 0.2, 5)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="wall17" type="CSGBox3D" parent="stage" groups=["wallsFloorsCeilings"]]
+transform = Transform3D(4.37114e-08, 1, -8.74228e-08, 1, -4.37114e-08, 0, -3.82138e-15, -8.74228e-08, -1, -38.2214, 5.49434, 0.890662)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(3.73044, 1.23098, 20.1292)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="wall16" type="CSGBox3D" parent="stage" groups=["wallsFloorsCeilings"]]
+transform = Transform3D(4.37114e-08, 1, -8.74228e-08, 1, -4.37114e-08, 0, -3.82137e-15, -8.74228e-08, -1, -42.7369, 5.49546, 7.15186)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(3.73267, 0.2, 0.393237)
 material = SubResource("StandardMaterial3D_dvn77")
 
 [node name="wall4" type="CSGBox3D" parent="stage" groups=["wallsFloorsCeilings"]]
@@ -455,11 +514,11 @@ size = Vector3(3.11816, 1, 13.3034)
 material = SubResource("StandardMaterial3D_dvn77")
 
 [node name="floor9" type="CSGBox3D" parent="stage"]
-transform = Transform3D(1.91069e-15, 4.37114e-08, -1, 0, 1, 4.37114e-08, 1, 0, 1.91069e-15, -32.0503, 6.10929, -8.16857)
+transform = Transform3D(1.91069e-15, 4.37114e-08, -1, 0, 1, 4.37114e-08, 1, 0, 1.91069e-15, -32.0503, 5.60979, -8.16857)
 use_collision = true
 collision_layer = 3
 collision_mask = 3
-size = Vector3(2.08154, 1, 13.3034)
+size = Vector3(2.08154, 0.001, 13.3034)
 material = SubResource("StandardMaterial3D_dvn77")
 
 [node name="ceiling" type="CSGBox3D" parent="stage" groups=["wallsFloorsCeilings"]]
@@ -468,6 +527,14 @@ use_collision = true
 collision_layer = 3
 collision_mask = 3
 size = Vector3(2.08154, 0.563843, 13.3034)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="ceiling3" type="CSGBox3D" parent="stage" groups=["wallsFloorsCeilings"]]
+transform = Transform3D(1, -1.91069e-15, 4.37114e-08, 0, 1, 4.37114e-08, -4.37114e-08, -4.37114e-08, 1, -40.1888, 10.7242, -1.11687)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(3.08044, 0.563843, 16.4)
 material = SubResource("StandardMaterial3D_dvn77")
 
 [node name="wall5" type="CSGBox3D" parent="stage" groups=["wallsFloorsCeilings"]]
@@ -480,11 +547,27 @@ size = Vector3(3.40179, 0.563843, 18.9403)
 material = SubResource("StandardMaterial3D_dvn77")
 
 [node name="wall6" type="CSGBox3D" parent="stage" groups=["wallsFloorsCeilings"]]
-transform = Transform3D(-4.37114e-08, 1, 8.74228e-08, -1, -4.37114e-08, -3.82137e-15, 4.23516e-22, -8.74228e-08, 1, -19.0859, 7.05098, 0.331699)
+transform = Transform3D(-4.37114e-08, 1, 8.74228e-08, -1, -4.37114e-08, -3.82137e-15, 4.23516e-22, -8.74228e-08, 1, -19.0859, 7.05098, 0.861549)
 use_collision = true
 collision_layer = 3
 collision_mask = 3
-size = Vector3(3.40179, 0.563843, 18.9403)
+size = Vector3(3.40179, 0.563843, 20)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="wall13" type="CSGBox3D" parent="stage" groups=["wallsFloorsCeilings"]]
+transform = Transform3D(-4.37114e-08, 1, 8.74228e-08, -1, -4.37114e-08, -3.82137e-15, 4.23516e-22, -8.74228e-08, 1, -19.0859, 2.42352, 6.40185)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(6, 0.563843, 9.2)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="wall14" type="CSGBox3D" parent="stage" groups=["wallsFloorsCeilings"]]
+transform = Transform3D(-4.37114e-08, 1, 8.74228e-08, -1, -4.37114e-08, -3.82137e-15, 4.23516e-22, -8.74228e-08, 1, -19.0859, 2.42352, -5.19815)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(6, 0.563843, 8)
 material = SubResource("StandardMaterial3D_dvn77")
 
 [node name="floor10" type="CSGBox3D" parent="stage"]
@@ -512,44 +595,99 @@ size = Vector3(16.2993, 0.563843, 3.15279)
 material = SubResource("StandardMaterial3D_dvn77")
 
 [node name="wall8" type="CSGBox3D" parent="stage" groups=["wallsFloorsCeilings"]]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -26.9704, -1.01863, 0.3268)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -27.5084, -1.01863, 0.3268)
 use_collision = true
 collision_layer = 3
 collision_mask = 3
-size = Vector3(10, 1, 8.47211)
+size = Vector3(3.26831, 1, 8.47211)
 material = SubResource("StandardMaterial3D_dvn77")
 
 [node name="wall9" type="CSGBox3D" parent="stage" groups=["wallsFloorsCeilings"]]
-transform = Transform3D(-4.37114e-08, -1, -4.37114e-08, 0, -4.37114e-08, 1, -1, 4.37114e-08, 1.91069e-15, -19.3824, -5.11925, 0.288409)
+transform = Transform3D(-4.37114e-08, -1, -4.37114e-08, 0, -4.37114e-08, 1, -1, 4.37114e-08, 1.91069e-15, -19.3824, -5.11925, 0.83146)
 use_collision = true
 collision_layer = 3
 collision_mask = 3
-size = Vector3(19.1139, 1, 8.27087)
+size = Vector3(20.2, 1, 8.27087)
 material = SubResource("StandardMaterial3D_dvn77")
 
 [node name="wall10" type="CSGBox3D" parent="stage" groups=["wallsFloorsCeilings"]]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -37.3279, -0.254685, 10.3268)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -37.3279, 0.845315, 12.1258)
 use_collision = true
 collision_layer = 3
 collision_mask = 3
-size = Vector3(37, 1, 18)
+size = Vector3(37, 2.6, 20.2)
 material = SubResource("StandardMaterial3D_dvn77")
 
 [node name="wall11" type="CSGBox3D" parent="stage" groups=["wallsFloorsCeilings"]]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -37.3279, -0.254685, -9.6732)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -37.3279, 0.945315, -9.6732)
 use_collision = true
 collision_layer = 3
 collision_mask = 3
-size = Vector3(37, 1, 18)
+size = Vector3(37, 1, 20.4)
 material = SubResource("StandardMaterial3D_dvn77")
 
 [node name="wall12" type="CSGBox3D" parent="stage" groups=["wallsFloorsCeilings"]]
-transform = Transform3D(-4.37114e-08, -1, -4.37114e-08, 0, -4.37114e-08, 1, -1, 4.37114e-08, 1.91069e-15, -55.3279, -0.254685, 0.326799)
+transform = Transform3D(-4.37114e-08, -1, -4.37114e-08, 0, -4.37114e-08, 1, -1, 4.37114e-08, 1.91069e-15, -55.3279, 0.845315, 0.826799)
 use_collision = true
 collision_layer = 3
 collision_mask = 3
-size = Vector3(19, 1, 18)
+size = Vector3(20, 1, 20.2)
 material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="non-stick-wall" type="CSGBox3D" parent="stage"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -27.5128, 1.55872, 0.81861)
+size = Vector3(0.0380859, 3.32617, 3.30419)
+material = SubResource("StandardMaterial3D_h8owr")
+
+[node name="stickdetection" type="Area3D" parent="stage/non-stick-wall"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="stage/non-stick-wall/stickdetection"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00274664, 0.201343, -0.000175476)
+shape = SubResource("BoxShape3D_oh4ee")
+
+[node name="non-stick-wall2" type="CSGBox3D" parent="stage"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -42.605, 2.54448, 0.81603)
+size = Vector3(0.0380859, 2.44775, 3.3262)
+material = SubResource("StandardMaterial3D_h8owr")
+
+[node name="stickdetection" type="Area3D" parent="stage/non-stick-wall2"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="stage/non-stick-wall2/stickdetection"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00183105, -0.00393677, -0.00837517)
+shape = SubResource("BoxShape3D_oh4ee")
+
+[node name="non-stick-wall3" type="CSGBox3D" parent="stage"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -40.605, 6.07798, 10.8085)
+size = Vector3(0.0380859, 2.6, 3.336)
+material = SubResource("StandardMaterial3D_h8owr")
+
+[node name="stickdetection" type="Area3D" parent="stage/non-stick-wall3"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="stage/non-stick-wall3/stickdetection"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00183105, -0.00393677, -0.00837517)
+shape = SubResource("BoxShape3D_oh4ee")
+
+[node name="non-stick-wall5" type="CSGBox3D" parent="stage"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -38.9074, 6.07798, 9.07042)
+size = Vector3(0.0380859, 2.6, 3.336)
+material = SubResource("StandardMaterial3D_h8owr")
+
+[node name="stickdetection" type="Area3D" parent="stage/non-stick-wall5"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="stage/non-stick-wall5/stickdetection"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00183105, -0.00393677, -0.00837517)
+shape = SubResource("BoxShape3D_oh4ee")
+
+[node name="non-stick-wall4" type="CSGBox3D" parent="stage"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -40.605, 5.97797, 7.4085)
+size = Vector3(0.0380859, 2.8, 3.336)
+material = SubResource("StandardMaterial3D_h8owr")
+
+[node name="stickdetection" type="Area3D" parent="stage/non-stick-wall4"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="stage/non-stick-wall4/stickdetection"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00183105, 0.0816784, -0.00837708)
+shape = SubResource("BoxShape3D_oh4ee")
 
 [node name="env" type="Node3D" parent="."]
 
@@ -689,6 +827,12 @@ shape = SubResource("BoxShape3D_a32se")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="player"]
 
+[node name="ropedetection" type="Area3D" parent="player"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="player/ropedetection"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_y0lgl")
+
 [node name="box" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.93099, 0, 0)
 collision_layer = 2
@@ -714,7 +858,7 @@ stream = ExtResource("11_41144")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.40764, 0)
 
 [node name="Water" type="MeshInstance3D" parent="."]
-transform = Transform3D(36.3878, 0, 0, 0, 4.25986, 0, 0, 0, 18.8718, -37.3873, -7.49321, 0.514363)
+transform = Transform3D(36.3878, 0, 0, 0, 4.25986, 0, 0, 0, 22.6462, -37.3873, -7.49321, 0.514363)
 mesh = SubResource("BoxMesh_bj45o")
 script = ExtResource("12_wdkii")
 
@@ -779,8 +923,23 @@ shape = SubResource("SphereShape3D_rdh8d")
 
 [node name="PauseMenu" parent="." instance=ExtResource("22_tiefe")]
 
+[node name="Path3DRope" parent="." instance=ExtResource("24_n7x4s")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.2, 5.4, 5.2)
+curve = SubResource("Curve3D_ngv02")
+
+[connection signal="body_entered" from="stage/non-stick-wall/stickdetection" to="player" method="_on_stickdetection_body_entered"]
+[connection signal="body_exited" from="stage/non-stick-wall/stickdetection" to="player" method="_on_stickdetection_body_exited"]
+[connection signal="body_entered" from="stage/non-stick-wall2/stickdetection" to="player" method="_on_stickdetection_body_entered"]
+[connection signal="body_exited" from="stage/non-stick-wall2/stickdetection" to="player" method="_on_stickdetection_body_exited"]
+[connection signal="body_entered" from="stage/non-stick-wall3/stickdetection" to="player" method="_on_stickdetection_body_entered"]
+[connection signal="body_exited" from="stage/non-stick-wall3/stickdetection" to="player" method="_on_stickdetection_body_exited"]
+[connection signal="body_entered" from="stage/non-stick-wall5/stickdetection" to="player" method="_on_stickdetection_body_entered"]
+[connection signal="body_exited" from="stage/non-stick-wall5/stickdetection" to="player" method="_on_stickdetection_body_exited"]
+[connection signal="body_entered" from="stage/non-stick-wall4/stickdetection" to="player" method="_on_stickdetection_body_entered"]
+[connection signal="body_exited" from="stage/non-stick-wall4/stickdetection" to="player" method="_on_stickdetection_body_exited"]
 [connection signal="body_entered" from="player/Area3D" to="player" method="_on_area_3d_body_entered"]
 [connection signal="body_exited" from="player/Area3D" to="player" method="_on_area_3d_body_exited"]
+[connection signal="body_entered" from="player/ropedetection" to="player" method="_on_ropedetection_body_entered"]
 [connection signal="body_entered" from="box" to="box" method="_on_body_entered"]
 [connection signal="body_exited" from="box" to="player" method="_on_box_body_exited"]
 [connection signal="finished" from="box/BoxImpact" to="box" method="_on_box_impact_finished"]

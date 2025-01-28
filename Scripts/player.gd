@@ -51,7 +51,7 @@ var crouching = false
 var free_looking = false
 var sliding = false
 var free_look_tilt_amount = 8.5
-const jump_velocity = 5
+const jump_velocity = 5.7
 var lerp_speed = 10.0
 var air_lerp_speed = 3.0
 const mouse_sens = 0.25
@@ -107,7 +107,7 @@ var wallrun_jump_direction = Vector3()  # Direction for the wall jump
 var wall_jump_count = 0
 var wall_jump_cooldown = 10.0
 var can_wall_jump = true
-var cooldown_timer
+var cooldown_timer = 0.0
 @onready var wall_jump_bar: ProgressBar = $WallJumpBar
 var wall_jump_regeneration_timer: float = 0.0  
 var wall_jump_regeneration_interval: float = 1.0  
@@ -123,8 +123,9 @@ var box_timer = 0.0
 var box_has_touched = false
 var box_time = 5.0
 
-
-
+##nonstick wall vars
+var wall_run_retry_cooldown: float = 1.0
+var wall_run_retry_timer: float = 0.0
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
 		$PauseMenu.pause()
@@ -165,10 +166,18 @@ func _process(delta: float) -> void:
 	var look_direction = -camera_3d.global_transform.basis.z
 	
 	look_direction = look_direction.normalized()
+	if wall_run_retry_timer > 0.0:
+		wall_run_retry_timer -= delta
+		
 	
+	if wall_run_retry_timer <= 0.0:
+		wall_run()
+	
+		
 	
 func pick_object():
 	var collider = interaction.get_collider()
+	
 	if collider != null and collider is RigidBody3D:
 		picked_object = collider
 		
@@ -179,6 +188,8 @@ func pick_object():
 		joint.set_node_b(picked_object.get_path())
 		 
 		object_pickup.play()
+		
+	
 
 func rotate_object(event):
 	if picked_object != null:
@@ -225,6 +236,10 @@ func perform_wall_jump():
 				
 func wall_run():
 	if wall_run_complete:
+		return
+		
+	if wall_run_retry_timer > 0.0:
+		print("Wall run cooldown active.")
 		return
 		
 	if is_on_wall() and !is_on_floor() and Input.is_action_pressed("forward"):
@@ -618,3 +633,36 @@ func _on_area_3d_body_exited(body: Node3D) -> void:
 
 func _on_body_collided(body):
 	pass
+
+##nonstick wall detection
+func _on_stickdetection_body_entered(body: Node3D) -> void:
+	if body.name == "player":
+		print("function call")
+		wallrunning = false
+		wall_run_timer = 0.0
+		wall_run_bar.value = 0.0
+		
+		wall_run_retry_timer = wall_run_retry_cooldown
+		
+		can_wall_jump = false
+		print("Nonstick wall detected")
+
+##nonstick wall detection exited
+func _on_stickdetection_body_exited(body: Node3D) -> void:
+	if body.name == "player":
+		can_wall_jump = true
+		print("Player exited")
+		
+		wall_run_retry_timer = 0.0
+		
+		
+
+
+func _on_ropedetection_body_entered(body: Node3D) -> void:
+	
+	if body.name.begins_with("@RigidBody3D@"):
+		print(body.name)
+		
+		
+	#if body.name == "@RigidBody3D@40":
+		#print("player touched rope")
