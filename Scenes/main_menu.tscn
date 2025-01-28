@@ -8,7 +8,7 @@
 [ext_resource type="AudioStream" uid="uid://gk8vnadl57jy" path="res://sound effects/UI SFX/select_007.ogg" id="10_y0tyn"]
 [ext_resource type="AudioStream" uid="uid://jrikuxdh8hko" path="res://sound effects/UI SFX/click_001.ogg" id="11_ldjg7"]
 [ext_resource type="Script" path="res://scenes/box.gd" id="13_2vc8p"]
-[ext_resource type="PackedScene" uid="uid://1ltnvm8yaidi" path="res://scenes/input_settings.tscn" id="13_l74hr"]
+[ext_resource type="PackedScene" uid="uid://1ltnvm8yaidi" path="res://Scenes/input_settings.tscn" id="13_l74hr"]
 [ext_resource type="AudioStream" uid="uid://dwpqu5ibm67tm" path="res://sound effects/WoodLogHandling1.wav" id="14_os1ne"]
 [ext_resource type="Script" path="res://scenes/water.gd" id="15_dd3ge"]
 [ext_resource type="AudioStream" uid="uid://bycd4qj6hl0i2" path="res://sound effects/CoastalWavesOnRocksLoop.wav" id="16_3gj7a"]

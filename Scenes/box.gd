@@ -19,7 +19,7 @@ func _physics_process(delta: float) -> void:
 		if body in get_tree().get_nodes_in_group("wallsFloorsCeilings"):
 			
 			emit_signal("bodycollided", body)
-	apply_impulse(Vector3.ZERO, Vector3(10,0,0))
+	apply_impulse(Vector3.ZERO, Vector3(10,10,10))
 	
 	
 	

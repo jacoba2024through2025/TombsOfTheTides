@@ -349,7 +349,7 @@ script = ExtResource("1_6kpv3")
 
 [node name="stage" type="Node3D" parent="."]
 
-[node name="floor2" type="CSGBox3D" parent="stage"]
+[node name="floor2" type="CSGBox3D" parent="stage" groups=["wallsFloorsCeilings"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.56878, -0.5, -0.0127044)
 layers = 3
 use_collision = true

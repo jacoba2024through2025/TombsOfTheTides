@@ -174,7 +174,10 @@ func pick_object():
 		
 		
 		
+		
+		
 		joint.set_node_b(picked_object.get_path())
+		 
 		object_pickup.play()
 
 func rotate_object(event):
@@ -287,8 +290,12 @@ func _physics_process(delta: float) -> void:
 		target_position.y -= vertical_offset
 		
 		
+		
 		picked_object.global_transform.origin = target_position
 		picked_object.global_transform.basis = camera_3d.global_transform.basis
+		
+		
+			
 	##Health regen logic
 	if !can_wall_jump:
 		cooldown_timer -= delta
