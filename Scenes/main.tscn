@@ -23,7 +23,7 @@
 [ext_resource type="AudioStream" uid="uid://dfyxkoatqbjd5" path="res://sound effects/music/Tomb of Tides In Game.wav" id="20_do3yu"]
 [ext_resource type="Script" path="res://Scenes/spinning_sphere.gd" id="21_2legu"]
 [ext_resource type="PackedScene" uid="uid://bxlvmfpioparp" path="res://pause_menu.tscn" id="22_tiefe"]
-[ext_resource type="PackedScene" uid="uid://x4xnc85khpl5" path="res://scenes/path_3d_rope.tscn" id="24_n7x4s"]
+[ext_resource type="PackedScene" uid="uid://x4xnc85khpl5" path="res://Scenes/path_3d_rope.tscn" id="24_n7x4s"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dvn77"]
 albedo_texture = ExtResource("1_1ox7n")
@@ -939,7 +939,7 @@ curve = SubResource("Curve3D_ngv02")
 [connection signal="body_exited" from="stage/non-stick-wall4/stickdetection" to="player" method="_on_stickdetection_body_exited"]
 [connection signal="body_entered" from="player/Area3D" to="player" method="_on_area_3d_body_entered"]
 [connection signal="body_exited" from="player/Area3D" to="player" method="_on_area_3d_body_exited"]
-[connection signal="body_entered" from="player/ropedetection" to="player" method="_on_ropedetection_body_entered"]
+[connection signal="body_entered" from="player/ropedetection" to="Path3DRope" method="_on_ropedetection_body_entered"]
 [connection signal="body_entered" from="box" to="box" method="_on_body_entered"]
 [connection signal="body_exited" from="box" to="player" method="_on_box_body_exited"]
 [connection signal="finished" from="box/BoxImpact" to="box" method="_on_box_impact_finished"]

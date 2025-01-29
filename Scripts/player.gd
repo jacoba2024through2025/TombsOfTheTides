@@ -658,10 +658,9 @@ func _on_stickdetection_body_exited(body: Node3D) -> void:
 		
 
 
-func _on_ropedetection_body_entered(body: Node3D) -> void:
+
 	
-	if body.name.begins_with("@RigidBody3D@"):
-		print(body.name)
+	
 		
 		
 	#if body.name == "@RigidBody3D@40":
