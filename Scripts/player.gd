@@ -126,13 +126,26 @@ var box_time = 5.0
 ##nonstick wall vars
 var wall_run_retry_cooldown: float = 1.0
 var wall_run_retry_timer: float = 0.0
+
+##rope swing vars
+@export var swinging_speed: float = 5.0
+@export var max_swinging_angle: float = 45.0
+@onready var path_3d_rope: Path3D = $"../Path3DRope"
+var swinging: bool = false
+var swing_direction: float = 1.0
+var swing_offset: float = 0.0
+
 func _unhandled_input(event: InputEvent) -> void:
+	
+	
 	if event.is_action_pressed("ui_cancel"):
 		$PauseMenu.pause()
 
 
 
 func _ready():
+	swing_offset = 0.0
+	
 	box.connect("bodycollided", Callable(player, "_on_body_collided"))
 	# Set the hurt_overlay to be invisible at the start
 	hurt_overlay.modulate = Color.TRANSPARENT
@@ -163,6 +176,8 @@ func _play_footstep_audio():
 			footstep.pitch_scale = randf_range(0.5, 0.7)
 			footstep.play()
 func _process(delta: float) -> void:
+	
+	
 	var look_direction = -camera_3d.global_transform.basis.z
 	
 	look_direction = look_direction.normalized()
@@ -181,7 +196,7 @@ func pick_object():
 	if collider != null and collider is RigidBody3D:
 		picked_object = collider
 		
-		
+	
 		
 		
 		
@@ -266,6 +281,11 @@ func wall_run():
 		wall_run_timer = 0.0
 		wall_run_bar.value = 0.0
 func _input(event):
+	if event.is_action_pressed("swing"):
+		swinging = true
+	elif event.is_action_released("swing"):
+		swinging = false
+	
 	if Input.is_action_just_pressed("interact"):
 		if picked_object == null:
 			
@@ -294,6 +314,28 @@ func _input(event):
 		head.rotation.x = clamp(head.rotation.x, deg_to_rad(-89), deg_to_rad(89))
 
 func _physics_process(delta: float) -> void:
+	if swinging:
+		# Update the swing offset based on swing direction and speed
+		#swing_offset += swing_direction * swinging_speed * delta
+		# Clamp the swing offset to the max swing angle
+		#if swing_offset > max_swinging_angle:	
+			#swing_offset = max_swinging_angle
+			#swing_direction *= -1  # Reverse direction
+		#elif swing_offset < -max_swinging_angle:
+			#swing_offset = -max_swinging_angle
+			#swing_direction *= -1  # Reverse direction
+		# Calculate the position along the path based on the swing offset
+		var path_points = path_3d_rope.get_curve().get_baked_points()
+		var total_points = path_points.size()
+		# Calculate the index based on the swing offset
+		var index = int((swing_offset + max_swinging_angle) / (2 * max_swinging_angle) * (total_points - 1))
+		index = clamp(index, 0, total_points - 1)
+		# Get the position on the path
+		var position_on_path = path_points[-1]
+		# Update the position of the CharacterBody3D
+		global_transform.origin = position_on_path
+			
+		
 	if picked_object != null:
 		var camera_position = camera_3d.global_transform.origin
 		var camera_direction = -camera_3d.global_transform.basis.z
@@ -532,6 +574,7 @@ func hurt(damage : float):
 	health_bar.value = current_health
 	
 	if health_bar.value <= 0:
+		print(health_bar.value)
 		get_tree().reload_current_scene()
 	
 	hurt_overlay.modulate = Color.WHITE
@@ -665,3 +708,8 @@ func _on_stickdetection_body_exited(body: Node3D) -> void:
 		
 	#if body.name == "@RigidBody3D@40":
 		#print("player touched rope")
+
+
+func _on_ropedetection_body_entered(body: Node3D) -> void:
+	if body.name.begins_with("@RigidBody3D@"):
+		pass

@@ -1,7 +1,7 @@
 extends Path3D
 # Script by Elijah Martin/Palin_drome
 
-@export_range(3, 200, 1) var number_of_segments = 10
+@export_range(1, 200, 1) var number_of_segments = 10
 @export_range(3, 50, 1) var mesh_sides = 6
 @export var cable_thickness = 0.05
 @export var fixed_start_point = true
@@ -120,17 +120,16 @@ func _physics_process(_delta: float) -> void:
 			curve.set_point_position(p, segments[p - 1].position - segments[p - 1].transform.basis.y * segments[p - 1].get_child(0).shape.height / 2)
 	
 	# Prevent gravity and movement while attached to the rope
-	if player_attached:
+	#if player_attached:
 		# Lock the player's velocity, stopping any movement, particularly gravity
-		player.velocity = Vector3(player.velocity.x, 0, player.velocity.z)
+		#player.velocity = Vector3(player.velocity.x, 0, player.velocity.z)
 		
 		# Ensure the PinJoint3D is handling the player's position
 		# Remove manual position updates, let the PinJoint3D handle it
 
 
-func _on_ropedetection_body_entered(body: Node3D) -> void:
-	if body.name.begins_with("@RigidBody3D@"):
-		print("well yeah")
+
+	
 
 
 
