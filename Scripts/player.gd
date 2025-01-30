@@ -128,11 +128,11 @@ var wall_run_retry_cooldown: float = 1.0
 var wall_run_retry_timer: float = 0.0
 
 ##rope swing vars
-@export var swinging_speed: float = 5.0
+@export var swinging_speed: float = 200.0
 @export var max_swinging_angle: float = 45.0
 @onready var path_3d_rope: Path3D = $"../Path3DRope"
 var swinging: bool = false
-var swing_direction: float = 1.0
+var swing_direction: Vector3 = Vector3.ZERO
 var swing_offset: float = 0.0
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -285,6 +285,21 @@ func _input(event):
 		swinging = true
 	elif event.is_action_released("swing"):
 		swinging = false
+		
+	if event.is_action_pressed("left"):
+		swing_direction.x = -1.0
+	elif event.is_action_pressed("right"):
+		swing_direction.x = 1.0
+	else:
+		swing_direction.x = 0.0
+		
+	if event.is_action_pressed("forward"):
+		swing_direction.z = -1.0
+	elif event.is_action_pressed("backward"):
+		swing_direction.z = 1.0
+	else:
+		swing_direction.z = 0.0
+		
 	
 	if Input.is_action_just_pressed("interact"):
 		if picked_object == null:
@@ -315,6 +330,9 @@ func _input(event):
 
 func _physics_process(delta: float) -> void:
 	if swinging:
+		velocity.y = 0
+		swing_offset += swing_direction.x * swinging_speed * delta
+		swing_offset += swing_direction.z * swinging_speed * delta
 		# Update the swing offset based on swing direction and speed
 		#swing_offset += swing_direction * swinging_speed * delta
 		# Clamp the swing offset to the max swing angle
@@ -712,4 +730,4 @@ func _on_stickdetection_body_exited(body: Node3D) -> void:
 
 func _on_ropedetection_body_entered(body: Node3D) -> void:
 	if body.name.begins_with("@RigidBody3D@"):
-		pass
+		print("ya touched the rope my guy")

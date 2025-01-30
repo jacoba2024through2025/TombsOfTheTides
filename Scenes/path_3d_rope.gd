@@ -9,6 +9,8 @@ extends Path3D
 @export var rigidbody_attached_to_start : RigidBody3D
 @export var rigidbody_attached_to_end : CharacterBody3D
 @export var material : Material
+@export var speed_factor : float = 0.7  # Adjust the speed of rope movement
+
 @onready var mesh := $CSGPolygon3D
 @onready var distance = curve.get_baked_length()
 
@@ -112,20 +114,22 @@ func _ready() -> void:
 
 
 func _physics_process(_delta: float) -> void:
-	# update curve positions
+	# update curve positions based on the speed_factor
 	for p in range(curve.point_count):
 		if p < number_of_segments:
-			curve.set_point_position(p, segments[p].position + segments[p].transform.basis.y * segments[p].get_child(0).shape.height / 2)
+			var segment_offset = segments[p].position + segments[p].transform.basis.y * segments[p].get_child(0).shape.height / 2
+			curve.set_point_position(p, segment_offset * speed_factor)
 		else:
-			curve.set_point_position(p, segments[p - 1].position - segments[p - 1].transform.basis.y * segments[p - 1].get_child(0).shape.height / 2)
+			var segment_offset_end = segments[p - 1].position - segments[p - 1].transform.basis.y * segments[p - 1].get_child(0).shape.height / 2
+			curve.set_point_position(p, segment_offset_end * speed_factor)
 	
-	# Prevent gravity and movement while attached to the rope
-	#if player_attached:
-		# Lock the player's velocity, stopping any movement, particularly gravity
-		#player.velocity = Vector3(player.velocity.x, 0, player.velocity.z)
-		
-		# Ensure the PinJoint3D is handling the player's position
-		# Remove manual position updates, let the PinJoint3D handle it
+	# Optional: Add logic here for player attachment speed adjustments, if needed
+	if player_attached:
+		var player_position = player.position
+		var rope_position = segments[number_of_segments - 1].position  # end point of the rope
+		player_position = lerp(player_position, rope_position, speed_factor * _delta)
+		player.position = player_position
+
 
 
 
