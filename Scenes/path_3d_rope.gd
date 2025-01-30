@@ -114,21 +114,29 @@ func _ready() -> void:
 
 
 func _physics_process(_delta: float) -> void:
-	# update curve positions based on the speed_factor
+	# Adjust the movement of the segments based on the speed_factor without altering their positions
 	for p in range(curve.point_count):
 		if p < number_of_segments:
+			# Calculate the segment's current position and velocity
 			var segment_offset = segments[p].position + segments[p].transform.basis.y * segments[p].get_child(0).shape.height / 2
-			curve.set_point_position(p, segment_offset * speed_factor)
+			# Update the curve point based on the segment's movement, without scaling the position
+			var movement = segment_offset - curve.get_point_position(p)
+			curve.set_point_position(p, curve.get_point_position(p) + movement * speed_factor)
 		else:
 			var segment_offset_end = segments[p - 1].position - segments[p - 1].transform.basis.y * segments[p - 1].get_child(0).shape.height / 2
-			curve.set_point_position(p, segment_offset_end * speed_factor)
-	
-	# Optional: Add logic here for player attachment speed adjustments, if needed
+			# Update the curve point in a similar manner for the end segment
+			var movement_end = segment_offset_end - curve.get_point_position(p)
+			curve.set_point_position(p, curve.get_point_position(p) + movement_end * speed_factor)
+
+	# Optional: Handle player attachment, using the same approach to adjust speed
 	if player_attached:
 		var player_position = player.position
 		var rope_position = segments[number_of_segments - 1].position  # end point of the rope
+		# Smoothly move the player along the rope without altering the rope's geometry
 		player_position = lerp(player_position, rope_position, speed_factor * _delta)
 		player.position = player_position
+
+	
 
 
 
@@ -144,3 +152,8 @@ func _physics_process(_delta: float) -> void:
 
 
 		
+
+
+func _on_area_3d_body_entered(body: Node3D) -> void:
+	if body.name == "player":
+		body.can_swing = true

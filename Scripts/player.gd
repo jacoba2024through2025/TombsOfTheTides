@@ -135,6 +135,8 @@ var swinging: bool = false
 var swing_direction: Vector3 = Vector3.ZERO
 var swing_offset: float = 0.0
 
+var can_swing: bool = false
+
 func _unhandled_input(event: InputEvent) -> void:
 	
 	
@@ -281,24 +283,30 @@ func wall_run():
 		wall_run_timer = 0.0
 		wall_run_bar.value = 0.0
 func _input(event):
-	if event.is_action_pressed("swing"):
-		swinging = true
-	elif event.is_action_released("swing"):
-		swinging = false
+	if can_swing:
+		if event.is_action_pressed("swing"):
+			swinging = true
+		elif event.is_action_released("swing"):
+			swinging = false
+			can_swing = false
 		
-	if event.is_action_pressed("left"):
-		swing_direction.x = -1.0
-	elif event.is_action_pressed("right"):
-		swing_direction.x = 1.0
-	else:
-		swing_direction.x = 0.0
-		
-	if event.is_action_pressed("forward"):
-		swing_direction.z = -1.0
-	elif event.is_action_pressed("backward"):
-		swing_direction.z = 1.0
-	else:
-		swing_direction.z = 0.0
+		if event.is_action_pressed("left"):
+			print("left direction")
+			swing_direction.x = -100.0
+		elif event.is_action_pressed("right"):
+			print("right direction")
+			swing_direction.x = 1.0
+		else:
+			swing_direction.x = 0.0
+			
+		if event.is_action_pressed("forward"):
+			print("forward direction")
+			swing_direction.z = -1.0
+		elif event.is_action_pressed("backward"):
+			print("backward direction")
+			swing_direction.z = 1.0
+		else:
+			swing_direction.z = 0.0
 		
 	
 	if Input.is_action_just_pressed("interact"):
@@ -731,3 +739,12 @@ func _on_stickdetection_body_exited(body: Node3D) -> void:
 func _on_ropedetection_body_entered(body: Node3D) -> void:
 	if body.name.begins_with("@RigidBody3D@"):
 		print("ya touched the rope my guy")
+		can_swing = true
+		
+			
+
+
+#func _on_ropedetection_body_exited(body: Node3D) -> void:
+	#if body.name.begins_with("@RigidBody3D@"):
+		#print("ya left the rope my guy")
+		#can_swing = false
