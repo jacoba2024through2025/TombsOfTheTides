@@ -1,4 +1,4 @@
-[gd_scene load_steps=64 format=3 uid="uid://k1nf1dhueuvi"]
+[gd_scene load_steps=69 format=3 uid="uid://k1nf1dhueuvi"]
 
 [ext_resource type="Texture2D" uid="uid://ckrsj5go8ckwh" path="res://assets/textures/dev/grids/Dark/texture_07.png" id="1_1ox7n"]
 [ext_resource type="Script" path="res://Scenes/main.gd" id="1_6kpv3"]
@@ -24,6 +24,9 @@
 [ext_resource type="Script" path="res://Scenes/spinning_sphere.gd" id="21_2legu"]
 [ext_resource type="PackedScene" uid="uid://bxlvmfpioparp" path="res://pause_menu.tscn" id="22_tiefe"]
 [ext_resource type="PackedScene" uid="uid://x4xnc85khpl5" path="res://scenes/path_3d_rope.tscn" id="24_n7x4s"]
+[ext_resource type="Script" path="res://scenes/music_area_3d.gd" id="25_exxw1"]
+[ext_resource type="Script" path="res://scenes/music_area_3d_2.gd" id="26_hnln6"]
+[ext_resource type="AudioStream" uid="uid://c11yvleusmlap" path="res://sound effects/music/Rolling Deep.wav" id="27_3vajt"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dvn77"]
 albedo_texture = ExtResource("1_1ox7n")
@@ -363,6 +366,12 @@ _data = {
 }
 point_count = 2
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_ds4ne"]
+size = Vector3(28.8, 7.4, 21)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_u6odb"]
+size = Vector3(37, 13.4, 21.2)
+
 [node name="world" type="Node3D"]
 script = ExtResource("1_6kpv3")
 
@@ -418,19 +427,19 @@ size = Vector3(5, 1, 4.08421)
 material = SubResource("StandardMaterial3D_dvn77")
 
 [node name="floor13" type="CSGBox3D" parent="stage"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0084, 1.90972, -6.62477)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -48.2084, 10.5097, 8.77523)
 use_collision = true
 collision_layer = 3
 collision_mask = 3
-size = Vector3(5, 1, 4.08421)
+size = Vector3(3.8, 1, 4.08421)
 material = SubResource("StandardMaterial3D_dvn77")
 
 [node name="floor14" type="CSGBox3D" parent="stage"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0084, 1.90972, 14.1752)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.2084, 8.30972, 9.91731)
 use_collision = true
 collision_layer = 3
 collision_mask = 3
-size = Vector3(5, 1, 4.08421)
+size = Vector3(5, 1, 2.2)
 material = SubResource("StandardMaterial3D_dvn77")
 
 [node name="floor5" type="CSGBox3D" parent="stage"]
@@ -594,14 +603,6 @@ collision_mask = 3
 size = Vector3(3.40179, 0.563843, 19.0319)
 material = SubResource("StandardMaterial3D_dvn77")
 
-[node name="wall7" type="CSGBox3D" parent="stage" groups=["wallsFloorsCeilings"]]
-transform = Transform3D(2.77556e-17, -4.47035e-08, 1, 2.83114e-09, -1, -8.9407e-08, 0.0323845, 8.74228e-08, 9.42489e-17, -25.5285, 6.94434, 0.327345)
-use_collision = true
-collision_layer = 3
-collision_mask = 3
-size = Vector3(3.40179, 3.62842, 12.7051)
-material = SubResource("StandardMaterial3D_dvn77")
-
 [node name="ceiling2" type="CSGBox3D" parent="stage" groups=["wallsFloorsCeilings"]]
 transform = Transform3D(1.91069e-15, 4.37114e-08, -1, 0, 1, 4.37114e-08, 1, 0, 1.91069e-15, -40.2826, 8.46247, -1.05966)
 use_collision = true
@@ -706,7 +707,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00183105, 0.0816784, -0.00
 shape = SubResource("BoxShape3D_oh4ee")
 
 [node name="env" type="Node3D" parent="."]
-visible = false
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="env"]
 environment = SubResource("Environment_yccv7")
@@ -922,6 +922,7 @@ texture = ExtResource("18_5m1h5")
 
 [node name="level_music" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("20_do3yu")
+volume_db = 7.517
 
 [node name="SpinningSphere" type="GPUParticles3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 1.5, 0)
@@ -941,8 +942,26 @@ shape = SubResource("SphereShape3D_rdh8d")
 [node name="PauseMenu" parent="." instance=ExtResource("22_tiefe")]
 
 [node name="Path3DRope" parent="." instance=ExtResource("24_n7x4s")]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -2.2, 6, 0)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -27, 14, 0)
 curve = SubResource("Curve3D_j4cue")
+
+[node name="MusicArea3D" type="Area3D" parent="."]
+script = ExtResource("25_exxw1")
+
+[node name="musictransition1" type="CollisionShape3D" parent="MusicArea3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 3.8, 0.463868)
+shape = SubResource("BoxShape3D_ds4ne")
+
+[node name="MusicArea3D2" type="Area3D" parent="."]
+script = ExtResource("26_hnln6")
+
+[node name="musictransition2" type="CollisionShape3D" parent="MusicArea3D2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -37.4, 6.2, 0.500001)
+shape = SubResource("BoxShape3D_u6odb")
+
+[node name="rolling_deep" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("27_3vajt")
+volume_db = 10.0
 
 [connection signal="body_entered" from="stage/non-stick-wall/stickdetection" to="player" method="_on_stickdetection_body_entered"]
 [connection signal="body_exited" from="stage/non-stick-wall/stickdetection" to="player" method="_on_stickdetection_body_exited"]
@@ -964,3 +983,7 @@ curve = SubResource("Curve3D_j4cue")
 [connection signal="body_entered" from="Water/Sound Detection" to="player" method="_on_sound_detection_body_entered"]
 [connection signal="body_exited" from="Water/Sound Detection" to="player" method="_on_sound_detection_body_exited"]
 [connection signal="body_entered" from="SpinningSphere/particle_detection" to="player" method="_on_particle_detection_body_entered"]
+[connection signal="body_entered" from="MusicArea3D" to="MusicArea3D" method="_on_body_entered"]
+[connection signal="body_exited" from="MusicArea3D" to="MusicArea3D" method="_on_body_exited"]
+[connection signal="body_entered" from="MusicArea3D2" to="MusicArea3D2" method="_on_body_entered"]
+[connection signal="body_exited" from="MusicArea3D2" to="MusicArea3D2" method="_on_body_exited"]

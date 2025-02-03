@@ -23,6 +23,8 @@ var segments : Array
 var joints : Array
 var curve_points : Array
 
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	# store position and rotation

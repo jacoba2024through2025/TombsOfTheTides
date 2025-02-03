@@ -132,9 +132,9 @@ var wall_run_retry_timer: float = 0.0
 @export var max_swinging_angle: float = 45.0
 @onready var path_3d_rope: Path3D = $"../Path3DRope"
 var swinging: bool = false
-var swing_direction: Vector3 = Vector3.ZERO
+var swing_direction: float = 0.0
 var swing_offset: float = 0.0
-
+var current_path_position: float = 0.0
 var can_swing: bool = false
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -286,28 +286,28 @@ func _input(event):
 	if can_swing:
 		if event.is_action_pressed("swing"):
 			swinging = true
+			
 		elif event.is_action_released("swing"):
 			swinging = false
 			can_swing = false
-		
-		if event.is_action_pressed("left"):
-			print("left direction")
-			swing_direction.x = -100.0
-		elif event.is_action_pressed("right"):
-			print("right direction")
-			swing_direction.x = 1.0
-		else:
-			swing_direction.x = 0.0
-			
+		var swing_move = Vector3.ZERO
 		if event.is_action_pressed("forward"):
-			print("forward direction")
-			swing_direction.z = -1.0
+			swing_move.z = 1000
+			print("forward")
 		elif event.is_action_pressed("backward"):
-			print("backward direction")
-			swing_direction.z = 1.0
+			swing_move.z = -1000
+			print("swing on the rope backwards")
+		elif event.is_action_pressed("left"):
+			swing_move.x = -1000
+			print("swing left on the rope")
+		elif event.is_action_pressed("right"):
+			swing_move.x = 1000
+			print("swing right on the rope")
 		else:
-			swing_direction.z = 0.0
-		
+			swing_move.x = 0
+			swing_move.z = 0
+			
+		velocity += swing_move
 	
 	if Input.is_action_just_pressed("interact"):
 		if picked_object == null:
@@ -339,28 +339,16 @@ func _input(event):
 func _physics_process(delta: float) -> void:
 	if swinging:
 		velocity.y = 0
-		swing_offset += swing_direction.x * swinging_speed * delta
-		swing_offset += swing_direction.z * swinging_speed * delta
-		# Update the swing offset based on swing direction and speed
-		#swing_offset += swing_direction * swinging_speed * delta
-		# Clamp the swing offset to the max swing angle
-		#if swing_offset > max_swinging_angle:	
-			#swing_offset = max_swinging_angle
-			#swing_direction *= -1  # Reverse direction
-		#elif swing_offset < -max_swinging_angle:
-			#swing_offset = -max_swinging_angle
-			#swing_direction *= -1  # Reverse direction
-		# Calculate the position along the path based on the swing offset
 		var path_points = path_3d_rope.get_curve().get_baked_points()
 		var total_points = path_points.size()
 		# Calculate the index based on the swing offset
 		var index = int((swing_offset + max_swinging_angle) / (2 * max_swinging_angle) * (total_points - 1))
 		index = clamp(index, 0, total_points - 1)
 		# Get the position on the path
-		var position_on_path = path_points[-1]
+		var position_on_path = path_points[index]
 		# Update the position of the CharacterBody3D
 		global_transform.origin = position_on_path
-			
+
 		
 	if picked_object != null:
 		var camera_position = camera_3d.global_transform.origin
@@ -738,7 +726,7 @@ func _on_stickdetection_body_exited(body: Node3D) -> void:
 
 func _on_ropedetection_body_entered(body: Node3D) -> void:
 	if body.name.begins_with("@RigidBody3D@"):
-		print("ya touched the rope my guy")
+		
 		can_swing = true
 		
 			
