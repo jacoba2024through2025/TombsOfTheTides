@@ -22,11 +22,11 @@
 [ext_resource type="Texture2D" uid="uid://1avw8r08vy6a" path="res://kenney_crosshair-pack/PNG/White/crosshair020.png" id="18_5m1h5"]
 [ext_resource type="AudioStream" uid="uid://dfyxkoatqbjd5" path="res://sound effects/music/Tomb of Tides In Game.wav" id="20_do3yu"]
 [ext_resource type="Script" path="res://Scenes/spinning_sphere.gd" id="21_2legu"]
-[ext_resource type="PackedScene" uid="uid://bxlvmfpioparp" path="res://pause_menu.tscn" id="22_tiefe"]
 [ext_resource type="PackedScene" uid="uid://x4xnc85khpl5" path="res://scenes/path_3d_rope.tscn" id="24_n7x4s"]
 [ext_resource type="Script" path="res://scenes/music_area_3d.gd" id="25_exxw1"]
 [ext_resource type="Script" path="res://scenes/music_area_3d_2.gd" id="26_hnln6"]
 [ext_resource type="AudioStream" uid="uid://c11yvleusmlap" path="res://sound effects/music/Rolling Deep.wav" id="27_3vajt"]
+[ext_resource type="PackedScene" uid="uid://c7pwtbte6ee8d" path="res://scenes/pause_menu.tscn" id="27_uwadf"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dvn77"]
 albedo_texture = ExtResource("1_1ox7n")
@@ -894,9 +894,9 @@ volume_db = -6.48
 stream = ExtResource("14_b85pc")
 volume_db = 15.238
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="CanvasLayer3" type="CanvasLayer" parent="."]
 
-[node name="crosshair" type="Control" parent="CanvasLayer"]
+[node name="crosshair" type="Control" parent="CanvasLayer3"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -904,7 +904,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="cross" type="TextureRect" parent="CanvasLayer/crosshair"]
+[node name="cross" type="TextureRect" parent="CanvasLayer3/crosshair"]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 1
 anchors_preset = 8
@@ -939,8 +939,6 @@ script = SubResource("GDScript_vjldx")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SpinningSphere/particle_detection"]
 shape = SubResource("SphereShape3D_rdh8d")
 
-[node name="PauseMenu" parent="." instance=ExtResource("22_tiefe")]
-
 [node name="Path3DRope" parent="." instance=ExtResource("24_n7x4s")]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -27, 14, 0)
 curve = SubResource("Curve3D_j4cue")
@@ -962,6 +960,10 @@ shape = SubResource("BoxShape3D_u6odb")
 [node name="rolling_deep" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("27_3vajt")
 volume_db = 10.0
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="PauseMenu" parent="CanvasLayer" instance=ExtResource("27_uwadf")]
 
 [connection signal="body_entered" from="stage/non-stick-wall/stickdetection" to="player" method="_on_stickdetection_body_entered"]
 [connection signal="body_exited" from="stage/non-stick-wall/stickdetection" to="player" method="_on_stickdetection_body_exited"]
