@@ -22,11 +22,11 @@
 [ext_resource type="Texture2D" uid="uid://1avw8r08vy6a" path="res://kenney_crosshair-pack/PNG/White/crosshair020.png" id="18_5m1h5"]
 [ext_resource type="AudioStream" uid="uid://dfyxkoatqbjd5" path="res://sound effects/music/Tomb of Tides In Game.wav" id="20_do3yu"]
 [ext_resource type="Script" path="res://Scenes/spinning_sphere.gd" id="21_2legu"]
-[ext_resource type="PackedScene" uid="uid://x4xnc85khpl5" path="res://scenes/path_3d_rope.tscn" id="24_n7x4s"]
+[ext_resource type="PackedScene" uid="uid://x4xnc85khpl5" path="res://Scenes/path_3d_rope.tscn" id="24_n7x4s"]
 [ext_resource type="Script" path="res://scenes/music_area_3d.gd" id="25_exxw1"]
 [ext_resource type="Script" path="res://scenes/music_area_3d_2.gd" id="26_hnln6"]
 [ext_resource type="AudioStream" uid="uid://c11yvleusmlap" path="res://sound effects/music/Rolling Deep.wav" id="27_3vajt"]
-[ext_resource type="PackedScene" uid="uid://c7pwtbte6ee8d" path="res://scenes/pause_menu.tscn" id="27_uwadf"]
+[ext_resource type="PackedScene" uid="uid://c7pwtbte6ee8d" path="res://Scenes/pause_menu.tscn" id="27_uwadf"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dvn77"]
 albedo_texture = ExtResource("1_1ox7n")

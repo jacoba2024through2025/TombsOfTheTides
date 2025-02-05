@@ -6,6 +6,7 @@ extends Control
 var is_remapping = false
 var action_to_remap = null
 var remapping_button = null
+@onready var hover: AudioStreamPlayer3D = $Hover
 
 var input_actions = {
 	"forward": "Forward",
@@ -13,11 +14,11 @@ var input_actions = {
 	"left": "Left",
 	"right": "Right",
 	"sprint": "Sprint",
-	"crouch": "Crouch",
+	"crouch": "Crouch/Slide",
 	"free_look": "Free look",
 	"interact": "Interact",
-	"rclick": "Rclick",
 	
+	"pause": "Pause game",
 	"swim": "Swim",
 	"jump": "Jump"
 }
@@ -91,8 +92,8 @@ func _process(delta: float) -> void:
 
 func _on_button_pressed() -> void:
 	print("Changing back to main menu")
-	get_tree().change_scene_to_packed(MAIN_MENU)
 	
+	$".".visible = false
 
 
 func _on_reset_button_pressed() -> void:
@@ -102,3 +103,16 @@ func _on_reset_button_pressed() -> void:
 		if events.size() > 0:
 			ConfigFileHandler.save_keybinding(action, events[0])
 	_create_action_list()
+
+
+
+
+
+func _on_reset_button_mouse_entered() -> void:
+	
+	hover.play()
+
+
+func _on_button_mouse_entered() -> void:
+	
+	hover.play()

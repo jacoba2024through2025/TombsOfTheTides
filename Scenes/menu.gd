@@ -29,4 +29,5 @@ func _on_quit_button_mouse_entered() -> void:
 
 func _on_load_button_pressed() -> void:
 	print("Going to controls menu")
-	get_tree().change_scene_to_packed(CONTROLS)
+	
+	$"../CanvasLayer/InputSettings".visible = true
