@@ -122,7 +122,10 @@ var target_height: float = 10.0
 var box_timer = 0.0
 var box_has_touched = false
 var box_time = 5.0
-
+var box_has_collided = false
+var is_box_held = false
+var box_collision_disabled = false
+####
 ##nonstick wall vars
 var wall_run_retry_cooldown: float = 1.0
 var wall_run_retry_timer: float = 0.0
@@ -139,12 +142,14 @@ var can_swing: bool = false
 
 
 
-
-
 func _ready():
+	
+	
+	
 	swing_offset = 0.0
 	
 	box.connect("bodycollided", Callable(player, "_on_body_collided"))
+	box.connect("custom_body_exited,", Callable(player, "_on_body_exited"))
 	# Set the hurt_overlay to be invisible at the start
 	hurt_overlay.modulate = Color.TRANSPARENT
 	interaction.collision_mask = 2
@@ -176,6 +181,27 @@ func _play_footstep_audio():
 func _process(delta: float) -> void:
 	
 	
+	if picked_object == box:
+		
+		if box_has_collided:
+			#box_collision_disabled = false
+			#remove_object()
+			
+			
+			
+			
+			box_has_collided = false
+			
+	
+		
+		
+			
+			
+		
+		
+	
+	
+		
 	var look_direction = -camera_3d.global_transform.basis.z
 	
 	look_direction = look_direction.normalized()
@@ -186,6 +212,7 @@ func _process(delta: float) -> void:
 	if wall_run_retry_timer <= 0.0:
 		wall_run()
 	
+
 		
 	
 func pick_object():
@@ -346,23 +373,25 @@ func _physics_process(delta: float) -> void:
 		global_transform.origin = position_on_path
 
 		
-	if picked_object != null:
+	if picked_object != null and !box_has_collided:
+		
+		
+		
+		
 		var camera_position = camera_3d.global_transform.origin
 		var camera_direction = -camera_3d.global_transform.basis.z
 		
-		var distance = 2.5
+		var distance = 0.5
 		var target_position = camera_position + camera_direction * distance
 		
 		var vertical_offset = 1
 		target_position.y -= vertical_offset
 		
+		#picked_object.global_transform.origin = target_position
+		#picked_object.global_transform.basis = camera_3d.global_transform.basis
 		
 		
-		picked_object.global_transform.origin = target_position
-		picked_object.global_transform.basis = camera_3d.global_transform.basis
 		
-		
-			
 	##Health regen logic
 	if !can_wall_jump:
 		cooldown_timer -= delta
@@ -654,7 +683,7 @@ func _on_area_3d_body_entered(body: Node3D) -> void:
 		
 		if looking_down and !is_on_floor():
 			if picked_object == body:
-				print("removing object!", look_direction.y)
+				
 				remove_object()
 		
 		
@@ -665,18 +694,8 @@ func _on_area_3d_body_entered(body: Node3D) -> void:
 		body.set_collision_layer_value(2, true)
 		box_has_touched = true
 		body.set_collision_mask_value(1, true)
-		
-#func _process(delta: float) -> void:
-	#if box_has_touched:
-		#box_timer += delta
-		#if box_timer >= box_time:
-			#timer_end() 		
-#
-#func timer_end():
-	#print("timer reset")
-	#box_has_touched = false
-	#box_timer = 0.0
-#
+
+
 func _on_area_3d_body_exited(body: Node3D) -> void:
 	if body.name == "box":
 		body.set_collision_layer_value(1, false)
@@ -685,7 +704,12 @@ func _on_area_3d_body_exited(body: Node3D) -> void:
 		body.set_collision_mask_value(1, true)
 
 func _on_body_collided(body):
-	pass
+	box_has_collided = true
+
+func _on_body_exited(body):
+	print("Box left the wall!")
+	
+
 
 ##nonstick wall detection
 func _on_stickdetection_body_entered(body: Node3D) -> void:
@@ -732,3 +756,8 @@ func _on_ropedetection_body_entered(body: Node3D) -> void:
 	#if body.name.begins_with("@RigidBody3D@"):
 		#print("ya left the rope my guy")
 		#can_swing = false
+
+
+func _on_boxdetection_body_entered(body: Node3D) -> void:
+	if body.name == "box":
+		remove_object()

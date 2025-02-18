@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://pause_menu.gd" id="1_rkjto"]
 [ext_resource type="AudioStream" uid="uid://gk8vnadl57jy" path="res://sound effects/UI SFX/select_007.ogg" id="2_58sb5"]
 [ext_resource type="Shader" path="res://pause_menu.gdshader" id="2_g1pi7"]
-[ext_resource type="PackedScene" uid="uid://1ltnvm8yaidi" path="res://Scenes/input_settings.tscn" id="3_tn20r"]
+[ext_resource type="PackedScene" uid="uid://1ltnvm8yaidi" path="res://scenes/input_settings.tscn" id="3_tn20r"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ya2rk"]
 shader = ExtResource("2_g1pi7")
@@ -132,6 +132,7 @@ theme_override_constants/separation = 70
 
 [node name="Resume" type="Button" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
+focus_mode = 1
 text = "Resume
 "
 

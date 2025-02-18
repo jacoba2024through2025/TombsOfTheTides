@@ -4,8 +4,9 @@ var velocity = 3
 
 @onready var box: RigidBody3D = $"."
 @onready var boxdetection: RayCast3D = $boxdetection
-
+signal custom_body_exited
 signal bodycollided
+
 var direction = Vector3(1,0,0)
 @onready var box_impact: AudioStreamPlayer3D = $BoxImpact
 
@@ -19,6 +20,9 @@ func _physics_process(delta: float) -> void:
 		if body in get_tree().get_nodes_in_group("wallsFloorsCeilings"):
 			
 			emit_signal("bodycollided", body)
+		else:
+			
+			emit_signal("custom_body_exited", body)
 	apply_impulse(Vector3.ZERO, Vector3(10,10,10))
 	
 	
