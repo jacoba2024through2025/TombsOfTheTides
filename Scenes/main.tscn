@@ -11,12 +11,12 @@ uv1_triplanar = true
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_k5mh5"]
 panorama = ExtResource("2_sg6od")
 
-[sub_resource type="Sky" id="Sky_kmy1v"]
+[sub_resource type="Sky" id="Sky_a1ti0"]
 sky_material = SubResource("PanoramaSkyMaterial_k5mh5")
 
 [sub_resource type="Environment" id="Environment_yccv7"]
 background_mode = 2
-sky = SubResource("Sky_kmy1v")
+sky = SubResource("Sky_a1ti0")
 tonemap_mode = 2
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_6yl07"]
