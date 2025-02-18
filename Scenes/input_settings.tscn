@@ -1,0 +1,104 @@
+[gd_scene load_steps=6 format=3 uid="uid://1ltnvm8yaidi"]
+
+[ext_resource type="Script" path="res://scenes/input_settings.gd" id="1_6uvri"]
+[ext_resource type="PackedScene" uid="uid://dcdfhecuopcc7" path="res://input_button.tscn" id="1_wjhtg"]
+[ext_resource type="AudioStream" uid="uid://jrikuxdh8hko" path="res://sound effects/UI SFX/click_001.ogg" id="2_vnii0"]
+
+[sub_resource type="SystemFont" id="SystemFont_0l75n"]
+font_names = PackedStringArray("Black Ops One")
+subpixel_positioning = 0
+
+[sub_resource type="SystemFont" id="SystemFont_4bkp8"]
+font_names = PackedStringArray("Black Ops One")
+subpixel_positioning = 0
+
+[node name="InputSettings" type="Control"]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_6uvri")
+
+[node name="Hover" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("2_vnii0")
+volume_db = 35.0
+max_db = 6.0
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = -358.0
+offset_top = -204.0
+offset_right = 398.0
+offset_bottom = 244.0
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ActionList" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="InputButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/ActionList" instance=ExtResource("1_wjhtg")]
+layout_mode = 2
+
+[node name="InputButton2" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/ActionList" instance=ExtResource("1_wjhtg")]
+layout_mode = 2
+
+[node name="InputButton3" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/ActionList" instance=ExtResource("1_wjhtg")]
+layout_mode = 2
+
+[node name="InputButton4" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/ActionList" instance=ExtResource("1_wjhtg")]
+layout_mode = 2
+
+[node name="InputButton5" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/ActionList" instance=ExtResource("1_wjhtg")]
+layout_mode = 2
+
+[node name="ResetButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+theme_override_fonts/font = SubResource("SystemFont_0l75n")
+text = "Reset Keybinds To Default
+"
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_left = -358.0
+offset_top = 259.0
+offset_right = -198.0
+offset_bottom = 290.0
+text = "Back To Main Menu"
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -66.0
+offset_top = -286.0
+offset_right = 67.0
+offset_bottom = -263.0
+grow_horizontal = 2
+theme_override_constants/outline_size = 16
+theme_override_fonts/font = SubResource("SystemFont_4bkp8")
+theme_override_font_sizes/font_size = 34
+text = "Change Keybinds"
+
+[connection signal="mouse_entered" from="PanelContainer/MarginContainer/VBoxContainer/ResetButton" to="." method="_on_reset_button_mouse_entered"]
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/ResetButton" to="." method="_on_reset_button_pressed"]
+[connection signal="mouse_entered" from="Button" to="." method="_on_button_mouse_entered"]
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

@@ -1,0 +1,375 @@
+[gd_scene load_steps=29 format=3 uid="uid://sucxe3px6gj3"]
+
+[ext_resource type="Texture2D" uid="uid://ckrsj5go8ckwh" path="res://assets/textures/dev/grids/Dark/texture_07.png" id="1_0gx5a"]
+[ext_resource type="Script" path="res://Scenes/main_menu.gd" id="1_tg5yt"]
+[ext_resource type="Texture2D" uid="uid://dw5jd84o6801p" path="res://assets/hdris/kloofendal_48d_partly_cloudy_puresky_2k.hdr" id="2_6den5"]
+[ext_resource type="Script" path="res://Scenes/menu.gd" id="9_0nyax"]
+[ext_resource type="AudioStream" uid="uid://c2kciax0y82ea" path="res://sound effects/music/Tomb of Tides Start Menu.wav" id="10_45v17"]
+[ext_resource type="AudioStream" uid="uid://gk8vnadl57jy" path="res://sound effects/UI SFX/select_007.ogg" id="10_y0tyn"]
+[ext_resource type="AudioStream" uid="uid://jrikuxdh8hko" path="res://sound effects/UI SFX/click_001.ogg" id="11_ldjg7"]
+[ext_resource type="Script" path="res://scenes/box.gd" id="13_2vc8p"]
+[ext_resource type="PackedScene" uid="uid://1ltnvm8yaidi" path="res://scenes/input_settings.tscn" id="13_l74hr"]
+[ext_resource type="AudioStream" uid="uid://dwpqu5ibm67tm" path="res://sound effects/WoodLogHandling1.wav" id="14_os1ne"]
+[ext_resource type="Script" path="res://scenes/water.gd" id="15_dd3ge"]
+[ext_resource type="AudioStream" uid="uid://bycd4qj6hl0i2" path="res://sound effects/CoastalWavesOnRocksLoop.wav" id="16_3gj7a"]
+[ext_resource type="AudioStream" uid="uid://brt1o7w750try" path="res://sound effects/WaterSplash2.wav" id="17_ym68p"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dvn77"]
+albedo_texture = ExtResource("1_0gx5a")
+uv1_triplanar = true
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_k5mh5"]
+panorama = ExtResource("2_6den5")
+
+[sub_resource type="Sky" id="Sky_kmy1v"]
+sky_material = SubResource("PanoramaSkyMaterial_k5mh5")
+
+[sub_resource type="Environment" id="Environment_yccv7"]
+background_mode = 2
+sky = SubResource("Sky_kmy1v")
+tonemap_mode = 2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xpugk"]
+albedo_color = Color(1, 0.647059, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_326ni"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jjnxj"]
+
+[sub_resource type="Shader" id="Shader_708qe"]
+code = "// NOTE: Shader automatically converted from Godot Engine 4.3.stable's StandardMaterial3D.
+
+shader_type spatial;
+render_mode blend_mix, depth_draw_always, cull_back, diffuse_burley, specular_schlick_ggx;
+
+uniform vec4 albedo : source_color;
+uniform sampler2D texture_albedo : source_color, filter_linear_mipmap, repeat_enable;
+uniform float point_size : hint_range(0.1, 128.0, 0.1);
+
+uniform float roughness : hint_range(0.0, 1.0);
+uniform sampler2D texture_metallic : hint_default_white, filter_linear_mipmap, repeat_enable;
+uniform vec4 metallic_texture_channel;
+uniform sampler2D texture_roughness : hint_roughness_r, filter_linear_mipmap, repeat_enable;
+
+uniform float specular : hint_range(0.0, 1.0, 0.01);
+uniform float metallic : hint_range(0.0, 1.0, 0.01);
+
+uniform sampler2D texture_refraction : filter_linear_mipmap, repeat_enable;
+uniform float refraction : hint_range(-1.0, 1.0, 0.001);
+uniform vec4 refraction_texture_channel;
+uniform sampler2D screen_texture : hint_screen_texture, repeat_disable, filter_linear_mipmap;
+
+uniform sampler2D texture_normal : hint_roughness_normal, filter_linear_mipmap, repeat_enable;
+uniform float normal_scale : hint_range(-16.0, 16.0);
+varying vec3 uv1_triplanar_pos;
+
+uniform float uv1_blend_sharpness : hint_range(0.0, 150.0, 0.001);
+varying vec3 uv1_power_normal;
+
+uniform vec3 uv1_scale;
+uniform vec3 uv1_offset;
+uniform vec3 uv2_scale;
+uniform vec3 uv2_offset;
+
+void vertex() {
+	vec3 normal = MODEL_NORMAL_MATRIX * NORMAL;
+
+	TANGENT = vec3(0.0, 0.0, -1.0) * abs(normal.x);
+	TANGENT += vec3(1.0, 0.0, 0.0) * abs(normal.y);
+	TANGENT += vec3(1.0, 0.0, 0.0) * abs(normal.z);
+	TANGENT = inverse(MODEL_NORMAL_MATRIX) * normalize(TANGENT);
+
+	BINORMAL = vec3(0.0, 1.0, 0.0) * abs(normal.x);
+	BINORMAL += vec3(0.0, 0.0, -1.0) * abs(normal.y);
+	BINORMAL += vec3(0.0, 1.0, 0.0) * abs(normal.z);
+	BINORMAL = inverse(MODEL_NORMAL_MATRIX) * normalize(BINORMAL);
+
+	// UV1 Triplanar: Enabled (with World Triplanar)
+	uv1_power_normal = pow(abs(normal), vec3(uv1_blend_sharpness));
+	uv1_triplanar_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz * uv1_scale + uv1_offset + TIME * 0.1;
+	uv1_power_normal /= dot(uv1_power_normal, vec3(1.0));
+	uv1_triplanar_pos *= vec3(1.0, -1.0, 1.0);
+}
+
+vec4 triplanar_texture(sampler2D p_sampler, vec3 p_weights, vec3 p_triplanar_pos) {
+	vec4 samp = vec4(0.0);
+	samp += texture(p_sampler, p_triplanar_pos.xy) * p_weights.z;
+	samp += texture(p_sampler, p_triplanar_pos.xz) * p_weights.y;
+	samp += texture(p_sampler, p_triplanar_pos.zy * vec2(-1.0, 1.0)) * p_weights.x;
+	return samp;
+}
+
+void fragment() {
+	vec4 albedo_tex = triplanar_texture(texture_albedo, uv1_power_normal, uv1_triplanar_pos);
+	ALBEDO = albedo.rgb * albedo_tex.rgb;
+
+	float metallic_tex = dot(triplanar_texture(texture_metallic, uv1_power_normal, uv1_triplanar_pos), metallic_texture_channel);
+	METALLIC = metallic_tex * metallic;
+	SPECULAR = specular;
+
+	vec4 roughness_texture_channel = vec4(1.0, 0.0, 0.0, 0.0);
+	float roughness_tex = dot(triplanar_texture(texture_roughness, uv1_power_normal, uv1_triplanar_pos), roughness_texture_channel);
+	ROUGHNESS = roughness_tex * roughness;
+
+	// Normal Map: Enabled
+	NORMAL_MAP = triplanar_texture(texture_normal, uv1_power_normal, uv1_triplanar_pos).rgb;
+	NORMAL_MAP_DEPTH = normal_scale;
+
+	// Refraction: Enabled (with normal map texture)
+	vec3 unpacked_normal = NORMAL_MAP;
+	unpacked_normal.xy = unpacked_normal.xy * 2.0 - 1.0;
+	unpacked_normal.z = sqrt(max(0.0, 1.0 - dot(unpacked_normal.xy, unpacked_normal.xy)));
+	vec3 ref_normal = normalize(mix(
+			NORMAL,
+			TANGENT * unpacked_normal.x + BINORMAL * unpacked_normal.y + NORMAL * unpacked_normal.z,
+			NORMAL_MAP_DEPTH));
+	vec2 ref_ofs = SCREEN_UV - ref_normal.xy * dot(triplanar_texture(texture_refraction, uv1_power_normal, uv1_triplanar_pos), refraction_texture_channel) * refraction;
+
+	float ref_amount = 1.0 - albedo.a * albedo_tex.a;
+	EMISSION += textureLod(screen_texture, ref_ofs, ROUGHNESS * 8.0).rgb * ref_amount * EXPOSURE;
+	ALBEDO *= 1.0 - ref_amount;
+	// Force transparency on the material (required for refraction).
+	ALPHA = 1.0;
+}
+"
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_abpr8"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_6rtb8"]
+seamless = true
+as_normal_map = true
+noise = SubResource("FastNoiseLite_abpr8")
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_u0j2w"]
+seamless = true
+as_normal_map = true
+noise = SubResource("FastNoiseLite_abpr8")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kox3b"]
+render_priority = 0
+shader = SubResource("Shader_708qe")
+shader_parameter/albedo = Color(0.333333, 0.619608, 1, 0.403922)
+shader_parameter/point_size = 1.0
+shader_parameter/roughness = 0.0
+shader_parameter/metallic_texture_channel = null
+shader_parameter/specular = 0.5
+shader_parameter/metallic = 0.0
+shader_parameter/refraction = 0.05
+shader_parameter/refraction_texture_channel = null
+shader_parameter/normal_scale = 1.0
+shader_parameter/uv1_blend_sharpness = 1.0
+shader_parameter/uv1_scale = Vector3(0.1, 0.1, 0.1)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
+shader_parameter/texture_refraction = SubResource("NoiseTexture2D_u0j2w")
+shader_parameter/texture_normal = SubResource("NoiseTexture2D_6rtb8")
+
+[sub_resource type="BoxMesh" id="BoxMesh_bj45o"]
+material = SubResource("ShaderMaterial_kox3b")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tjkvi"]
+
+[sub_resource type="SystemFont" id="SystemFont_6q3sw"]
+font_names = PackedStringArray("Black Ops One")
+
+[node name="world" type="Node3D"]
+script = ExtResource("1_tg5yt")
+
+[node name="stage" type="Node3D" parent="."]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.56878, -0.5, -0.0127044)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(35.146, 1, 20)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -37.3421, -8.85961, -0.0127044)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(37, 1, 20)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.0042, 1.92946, -0.0127044)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(20, 1, 20)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -39.2858, -1.01863, 0.326804)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(16.6307, 1, 8.47211)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -26.9704, -1.01863, 0.3268)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(10, 1, 8.47211)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="CSGBox3D9" type="CSGBox3D" parent="stage"]
+transform = Transform3D(-4.37114e-08, -1, -4.37114e-08, 0, -4.37114e-08, 1, -1, 4.37114e-08, 1.91069e-15, -19.3824, -5.11925, 0.288409)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(19.1139, 1, 8.27087)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -37.3279, -0.254685, 10.3268)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(37, 1, 18)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="CSGBox3D7" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -37.3279, -0.254685, -9.6732)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(37, 1, 18)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="CSGBox3D8" type="CSGBox3D" parent="stage"]
+transform = Transform3D(-4.37114e-08, -1, -4.37114e-08, 0, -4.37114e-08, 1, -1, 4.37114e-08, 1.91069e-15, -55.3279, -0.254685, 0.326799)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(19, 1, 18)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="env" type="Node3D" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="env"]
+environment = SubResource("Environment_yccv7")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="env"]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
+
+[node name="box" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.50765, 0.639908, -0.153813)
+collision_layer = 2
+collision_mask = 3
+contact_monitor = true
+max_contacts_reported = 1
+script = ExtResource("13_2vc8p")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="box"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.23411, 0)
+material_override = SubResource("StandardMaterial3D_xpugk")
+mesh = SubResource("BoxMesh_326ni")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="box"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.23591, 0)
+shape = SubResource("BoxShape3D_jjnxj")
+
+[node name="BoxImpact" type="AudioStreamPlayer3D" parent="box"]
+stream = ExtResource("14_os1ne")
+
+[node name="Water" type="MeshInstance3D" parent="."]
+transform = Transform3D(36.3878, 0, 0, 0, 4.25986, 0, 0, 0, 18.8718, -37.3873, -7.49321, 0.514363)
+mesh = SubResource("BoxMesh_bj45o")
+script = ExtResource("15_dd3ge")
+
+[node name="Sound Detection" type="Area3D" parent="Water"]
+collision_layer = 3
+collision_mask = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Water/Sound Detection"]
+shape = SubResource("BoxShape3D_tjkvi")
+
+[node name="RunningWater" type="AudioStreamPlayer3D" parent="Water"]
+stream = ExtResource("16_3gj7a")
+volume_db = -6.48
+
+[node name="ObjectSplash" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("17_ym68p")
+volume_db = 15.238
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -173.0
+offset_top = -98.5
+offset_right = 173.0
+offset_bottom = 98.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("9_0nyax")
+
+[node name="NewGameButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "Play Game"
+
+[node name="Click" type="AudioStreamPlayer3D" parent="VBoxContainer/NewGameButton"]
+stream = ExtResource("10_y0tyn")
+volume_db = 15.0
+
+[node name="Hover" type="AudioStreamPlayer3D" parent="VBoxContainer/NewGameButton"]
+stream = ExtResource("11_ldjg7")
+
+[node name="LoadButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "Controls/Keybinds"
+
+[node name="QuitButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "Quit Game"
+
+[node name="CameraPivot" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot"]
+transform = Transform3D(-0.34937, -0.233615, 0.907394, -0.0839409, 0.972329, 0.218014, -0.933217, 0, -0.359313, -19.2351, 10.0828, -4.70426)
+
+[node name="main_menu_music" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("10_45v17")
+volume_db = 4.76
+
+[node name="Label" type="Label" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -386.0
+offset_top = 65.0
+offset_right = 386.0
+offset_bottom = 166.0
+grow_horizontal = 2
+theme_override_constants/outline_size = 31
+theme_override_fonts/font = SubResource("SystemFont_6q3sw")
+theme_override_font_sizes/font_size = 80
+text = "Tomb Of The Tides"
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="InputSettings" parent="CanvasLayer" instance=ExtResource("13_l74hr")]
+visible = false
+
+[connection signal="body_entered" from="box" to="box" method="_on_body_entered"]
+[connection signal="finished" from="box/BoxImpact" to="box" method="_on_box_impact_finished"]
+[connection signal="mouse_entered" from="VBoxContainer/NewGameButton" to="VBoxContainer" method="_on_new_game_button_mouse_entered"]
+[connection signal="pressed" from="VBoxContainer/NewGameButton" to="VBoxContainer" method="_on_new_game_button_pressed"]
+[connection signal="mouse_entered" from="VBoxContainer/LoadButton" to="VBoxContainer" method="_on_load_button_mouse_entered"]
+[connection signal="pressed" from="VBoxContainer/LoadButton" to="VBoxContainer" method="_on_load_button_pressed"]
+[connection signal="mouse_entered" from="VBoxContainer/QuitButton" to="VBoxContainer" method="_on_quit_button_mouse_entered"]
+[connection signal="pressed" from="VBoxContainer/QuitButton" to="VBoxContainer" method="_on_quit_button_pressed"]
