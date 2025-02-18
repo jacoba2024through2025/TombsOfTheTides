@@ -2,17 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dr7yjeb30gflr"
-path.s3tc="res://.godot/imported/texture_02.png-2498ef3ee1bb7a6accf4747c4cf63fb3.s3tc.ctex"
+uid="uid://vp70i2scqtxy"
+path.s3tc="res://.godot/imported/entrance-door_atlas.png-cebf3c2f3ed014cee582981238c50c6e.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
+generator_parameters={
+"md5": "eb210caa139796618122022b4d7f7aa9"
+}
 
 [deps]
 
-source_file="res://Scenes/texture_02.png"
-dest_files=["res://.godot/imported/texture_02.png-2498ef3ee1bb7a6accf4747c4cf63fb3.s3tc.ctex"]
+source_file="res://Scenes/entrance-door_atlas.png"
+dest_files=["res://.godot/imported/entrance-door_atlas.png-cebf3c2f3ed014cee582981238c50c6e.s3tc.ctex"]
 
 [params]
 

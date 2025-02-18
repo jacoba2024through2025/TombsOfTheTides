@@ -358,6 +358,28 @@ func _input(event):
 			rotate_y(deg_to_rad(-event.relative.x * mouse_sens))
 		head.rotate_x(deg_to_rad(-event.relative.y * mouse_sens))
 		head.rotation.x = clamp(head.rotation.x, deg_to_rad(-89), deg_to_rad(89))
+		
+# (Aaron) Go up and down stairs
+var was_on_floor = false
+var snapped_last_frame = false
+
+func snap_down_to_stairs_check():
+	var did_snap = false
+	if not is_on_floor() and velocity.y <= 0 and (was_on_floor or snapped_last_frame) or not $Control/StairsBelowRayCast3D.is_colliding():
+		var body_test_result = PhysicsTestMotionResult3D.new()
+		var params = PhysicsTestMotionParameters3D.new()
+		var max_step_down = -1
+		params.from = self.global_transform
+		params.motion = Vector3(0,max_step_down,0)
+		if PhysicsServer3D.body_test_motion(self.get_rid(), params, body_test_result):
+			var translate_y = body_test_result.get_travel().y
+			self.position.y += translate_y
+			apply_floor_snap()
+			did_snap = true
+	
+	was_on_floor = is_on_floor()
+	snapped_last_frame = did_snap
+# (Aaron)
 
 func _physics_process(delta: float) -> void:
 	if swinging:
@@ -600,6 +622,7 @@ func _physics_process(delta: float) -> void:
 	
 	
 	move_and_slide()
+	snap_down_to_stairs_check()
 	
 	for i in get_slide_collision_count():
 		var c = get_slide_collision(i)
