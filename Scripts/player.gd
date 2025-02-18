@@ -365,7 +365,7 @@ var snapped_last_frame = false
 
 func snap_down_to_stairs_check():
 	var did_snap = false
-	if not is_on_floor() and velocity.y <= 0 and (was_on_floor or snapped_last_frame) or $Control/StairsBelowRayCast3D.is_colliding():
+	if not is_on_floor() and velocity.y <= 0 and (was_on_floor or snapped_last_frame) or not $Control/StairsBelowRayCast3D.is_colliding():
 		var body_test_result = PhysicsTestMotionResult3D.new()
 		var params = PhysicsTestMotionParameters3D.new()
 		var max_step_down = -1

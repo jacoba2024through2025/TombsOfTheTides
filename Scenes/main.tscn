@@ -22,11 +22,11 @@
 [ext_resource type="Texture2D" uid="uid://1avw8r08vy6a" path="res://kenney_crosshair-pack/PNG/White/crosshair020.png" id="18_5m1h5"]
 [ext_resource type="AudioStream" uid="uid://dfyxkoatqbjd5" path="res://sound effects/music/Tomb of Tides In Game.wav" id="20_do3yu"]
 [ext_resource type="Script" path="res://Scenes/spinning_sphere.gd" id="21_2legu"]
-[ext_resource type="PackedScene" uid="uid://x4xnc85khpl5" path="res://scenes/path_3d_rope.tscn" id="24_n7x4s"]
+[ext_resource type="PackedScene" uid="uid://x4xnc85khpl5" path="res://Scenes/path_3d_rope.tscn" id="24_n7x4s"]
 [ext_resource type="Script" path="res://scenes/music_area_3d.gd" id="25_exxw1"]
 [ext_resource type="Script" path="res://scenes/music_area_3d_2.gd" id="26_hnln6"]
 [ext_resource type="AudioStream" uid="uid://c11yvleusmlap" path="res://sound effects/music/Rolling Deep.wav" id="27_3vajt"]
-[ext_resource type="PackedScene" uid="uid://c7pwtbte6ee8d" path="res://scenes/pause_menu.tscn" id="27_uwadf"]
+[ext_resource type="PackedScene" uid="uid://c7pwtbte6ee8d" path="res://Scenes/pause_menu.tscn" id="27_uwadf"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dvn77"]
 albedo_texture = ExtResource("1_1ox7n")
@@ -293,19 +293,19 @@ void fragment() {
 }
 "
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_abpr8"]
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_eky37"]
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_6rtb8"]
 seamless = true
 as_normal_map = true
-noise = SubResource("FastNoiseLite_abpr8")
+noise = SubResource("FastNoiseLite_eky37")
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_u0j2w"]
 seamless = true
 as_normal_map = true
-noise = SubResource("FastNoiseLite_abpr8")
+noise = SubResource("FastNoiseLite_eky37")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_kox3b"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_m6kpv"]
 render_priority = 0
 shader = SubResource("Shader_708qe")
 shader_parameter/albedo = Color(0.333333, 0.619608, 1, 0.403922)
@@ -326,7 +326,7 @@ shader_parameter/texture_refraction = SubResource("NoiseTexture2D_u0j2w")
 shader_parameter/texture_normal = SubResource("NoiseTexture2D_6rtb8")
 
 [sub_resource type="BoxMesh" id="BoxMesh_bj45o"]
-material = SubResource("ShaderMaterial_kox3b")
+material = SubResource("ShaderMaterial_m6kpv")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_tjkvi"]
 
@@ -929,6 +929,15 @@ shape = SubResource("CapsuleShape3D_y0lgl")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="player/feet/boxdetection"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0649261, 0.230225, 0.0315857)
 shape = SubResource("BoxShape3D_7hofa")
+
+[node name="Control" type="Control" parent="player"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="StairsBelowRayCast3D" type="RayCast3D" parent="player/Control"]
+target_position = Vector3(0, -2, 0)
 
 [node name="box" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.93099, 0, 0)
