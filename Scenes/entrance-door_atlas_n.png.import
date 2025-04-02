@@ -3,26 +3,25 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c4tx6cq0beqno"
-path.s3tc="res://.godot/imported/entrance-door_atlas_n.png-2e3abbda10eb4497961048eb1868ac3e.s3tc.ctex"
+path="res://.godot/imported/entrance-door_atlas_n.png-2e3abbda10eb4497961048eb1868ac3e.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://scenes/entrance-door_atlas_n.png"
-dest_files=["res://.godot/imported/entrance-door_atlas_n.png-2e3abbda10eb4497961048eb1868ac3e.s3tc.ctex"]
+dest_files=["res://.godot/imported/entrance-door_atlas_n.png-2e3abbda10eb4497961048eb1868ac3e.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
-compress/normal_map=1
+compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=true
+mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=1
 roughness/src_normal="res://scenes/entrance-door_atlas_n.png"
@@ -32,4 +31,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=0
+detect_3d/compress_to=1

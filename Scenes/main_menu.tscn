@@ -201,6 +201,7 @@ Button/styles/normal = SubResource("StyleBoxFlat_871m5")
 
 [sub_resource type="SystemFont" id="SystemFont_7edd5"]
 font_names = PackedStringArray("Black Ops One")
+subpixel_positioning = 0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vhmiv"]
 bg_color = Color(0.529412, 0.145098, 0.231373, 1)
@@ -221,6 +222,7 @@ Button/styles/normal = SubResource("StyleBoxFlat_vhmiv")
 
 [sub_resource type="SystemFont" id="SystemFont_jk16b"]
 font_names = PackedStringArray("Black Ops One")
+subpixel_positioning = 0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l4twq"]
 bg_color = Color(0.419608, 0.109804, 0.172549, 1)
@@ -252,6 +254,7 @@ Button/styles/normal = SubResource("StyleBoxFlat_mqy5p")
 
 [sub_resource type="SystemFont" id="SystemFont_gxfvu"]
 font_names = PackedStringArray("Black Ops One")
+subpixel_positioning = 0
 
 [node name="world2" type="Node3D"]
 script = ExtResource("1_tg5yt")
@@ -396,6 +399,12 @@ size_flags_vertical = 4
 script = ExtResource("9_0nyax")
 
 [node name="Sprite2D" type="Sprite2D" parent="VBoxContainer"]
+texture_filter = 1
+position = Vector2(197, -80)
+scale = Vector2(0.725, 0.576389)
+texture = ExtResource("10_2g4oa")
+
+[node name="Sprite2D2" type="Sprite2D" parent="VBoxContainer"]
 texture_filter = 1
 position = Vector2(197, -80)
 scale = Vector2(0.725, 0.576389)
