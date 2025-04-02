@@ -158,4 +158,12 @@ func _physics_process(_delta: float) -> void:
 
 func _on_area_3d_body_entered(body: Node3D) -> void:
 	if body.name == "player":
-		body.can_swing = true
+		
+		if self.name == "Path3DRope2":
+			Global.ropeString = 2
+			body.can_swing = true
+		elif self.name == "Path3DRope":
+			Global.ropeString = 1
+			body.can_swing = true
+			
+		

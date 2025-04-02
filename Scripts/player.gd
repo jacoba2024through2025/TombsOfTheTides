@@ -26,6 +26,8 @@ extends CharacterBody3D
 @onready var hurt_overlay: TextureRect = $HurtOverlay
 @onready var health_bar: ProgressBar = $HealthBar
 @onready var damage_sound: AudioStreamPlayer3D = $DamageSound
+@onready var path_3d_rope_2: Path3D = $"../Path3DRope2"
+@onready var box_2: RigidBody3D = $"../box2"
 
 var hurt_tween : Tween
 
@@ -69,7 +71,7 @@ var head_bobbing_current_intensity = 0.0
 var water_entered = false
 var buoyancy_force = Vector3(0, 5000, 0)  # Buoyancy force for the box
 var water_surface_height = 0.0  # Height of the water's surface (you can adjust this depending on your scene)
-
+var is_jumping = false
 # Fall damage threshold (you can adjust this value)
 const FALL_DAMAGE_THRESHOLD = -12.0
 var health_regen_rate = 0.5 # Health restored per second
@@ -125,6 +127,8 @@ var box_time = 5.0
 var box_has_collided = false
 var is_box_held = false
 var box_collision_disabled = false
+@onready var boxdetection: RayCast3D = $"../box/boxdetection"
+
 ####
 ##nonstick wall vars
 var wall_run_retry_cooldown: float = 1.0
@@ -140,8 +144,15 @@ var swing_offset: float = 0.0
 var current_path_position: float = 0.0
 var can_swing: bool = false
 
+@onready var swingingsound: AudioStreamPlayer3D = $swingingsound
 
 
+@onready var node_2d: Node2D = $"../Node2D"
+### Vault/Mantle vars
+
+@onready var rope_point: RayCast3D = $RopePoint
+
+	
 func _ready():
 	
 	
@@ -180,6 +191,14 @@ func _play_footstep_audio():
 			footstep.play()
 func _process(delta: float) -> void:
 	
+	
+	
+	if Global.boxStopping:
+		box.angular_velocity = Vector3(0,0,0)
+		
+	
+	
+		
 	
 	if picked_object == box:
 		
@@ -221,6 +240,8 @@ func pick_object():
 	if collider != null and collider is RigidBody3D:
 		picked_object = collider
 		
+		Global.boxAccess = false
+		
 	
 		
 		
@@ -246,9 +267,6 @@ func remove_object():
 		
 		joint.set_node_b(joint.get_path())
 		
-
-		
-		
 func perform_wall_jump():
 	if can_wall_jump and wall_jump_count > 0:
 		if wallrunning:
@@ -270,19 +288,17 @@ func perform_wall_jump():
 	elif wall_jump_count <= 0:
 		can_wall_jump = false
 		cooldown_timer = wall_jump_cooldown
-		print("Wait 3 seconds")
-				
 					
-				
 func wall_run():
 	if wall_run_complete:
 		return
 		
 	if wall_run_retry_timer > 0.0:
-		print("Wall run cooldown active.")
+		
 		return
 		
 	if is_on_wall() and !is_on_floor() and Input.is_action_pressed("forward"):
+	
 		if wall_run_timer <= max_wall_run_time:
 			velocity.y = 0
 			wallrunning = true
@@ -316,16 +332,16 @@ func _input(event):
 		var swing_move = Vector3.ZERO
 		if event.is_action_pressed("forward"):
 			swing_move.z = 1000
-			print("forward")
+			
 		elif event.is_action_pressed("backward"):
 			swing_move.z = -1000
-			print("swing on the rope backwards")
+			
 		elif event.is_action_pressed("left"):
 			swing_move.x = -1000
-			print("swing left on the rope")
+			
 		elif event.is_action_pressed("right"):
 			swing_move.x = 1000
-			print("swing right on the rope")
+			
 		else:
 			swing_move.x = 0
 			swing_move.z = 0
@@ -339,7 +355,7 @@ func _input(event):
 		elif picked_object != null:
 			remove_object()
 		elif picked_object != null and is_on_wall():
-			print("object collided")
+			
 			remove_object()
 	if Input.is_action_pressed('rclick'):
 		locked = true
@@ -359,14 +375,18 @@ func _input(event):
 		head.rotate_x(deg_to_rad(-event.relative.y * mouse_sens))
 		head.rotation.x = clamp(head.rotation.x, deg_to_rad(-89), deg_to_rad(89))
 		
-# (Aaron) Go up and down stairs
+#(Aaron) Go up and down stairs
+
+
 var was_on_floor = false
 var snapped_last_frame = false
 
 func snap_down_to_stairs_check():
 	var did_snap = false
 	if not is_on_floor() and velocity.y <= 0 and (was_on_floor or snapped_last_frame) or not $Control/StairsBelowRayCast3D.is_colliding():
+		landing.stop()
 		var body_test_result = PhysicsTestMotionResult3D.new()
+		
 		var params = PhysicsTestMotionParameters3D.new()
 		var max_step_down = -1
 		params.from = self.global_transform
@@ -379,21 +399,55 @@ func snap_down_to_stairs_check():
 	
 	was_on_floor = is_on_floor()
 	snapped_last_frame = did_snap
-# (Aaron)
+
+
+
+
+
 
 func _physics_process(delta: float) -> void:
+	
+	
+			
+	
+			
 	if swinging:
+		if not swingingsound.playing:
+			swingingsound.play()
+	
+		
 		velocity.y = 0
-		var path_points = path_3d_rope.get_curve().get_baked_points()
+		var path_points = 0
+		
+		
+			
+		
+		if Global.ropeString == 1:
+			path_points = path_3d_rope.get_curve().get_baked_points()
+		
+			
+			
+			
+		elif Global.ropeString == 2:
+			path_points = path_3d_rope_2.get_curve().get_baked_points()
+			
+		
 		var total_points = path_points.size()
+		
+		
+		 
 		# Calculate the index based on the swing offset
 		var index = int((swing_offset + max_swinging_angle) / (2 * max_swinging_angle) * (total_points - 1))
 		index = clamp(index, 0, total_points - 1)
 		# Get the position on the path
-		var position_on_path = path_points[index]
+		var position_on_path = path_points[index + 3]
+		
 		# Update the position of the CharacterBody3D
 		global_transform.origin = position_on_path
-
+			
+		
+	else:
+		swingingsound.stop()
 		
 	if picked_object != null and !box_has_collided:
 		
@@ -421,7 +475,7 @@ func _physics_process(delta: float) -> void:
 			can_wall_jump = true
 			wall_jump_count = 9
 			wall_jump_bar.value = wall_jump_count
-			print("cooldown finished jump again")
+			
 	
 	if wall_jump_count < 9:
 		wall_jump_regeneration_timer += delta
@@ -556,17 +610,20 @@ func _physics_process(delta: float) -> void:
 	# Handle jump
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
 		
-		velocity.y = jump_velocity
 		
+		velocity.y = jump_velocity
+		is_jumping = true
 		sliding = false
 		animation_player.play("jump")
 		jumping.play()
 
 	# Handle landing and fall damage
 	if is_on_floor():
+		is_jumping = false
+		
 		if last_velocity.y < 0.0:
 			if last_velocity.y < FALL_DAMAGE_THRESHOLD:
-				print(last_velocity.y)
+				
 				if last_velocity.y > -15:
 					
 					print(last_velocity.y, "taken less")
@@ -576,10 +633,12 @@ func _physics_process(delta: float) -> void:
 				elif last_velocity.y < -20:
 					print(last_velocity.y, "taken more")
 					hurt(75)
+			
 			landing.play()
 			animation_player.play("landing")
 			if jumping.playing:
 				jumping.stop()
+	
 
 	# Get the input direction and handle the movement/deceleration
 	if is_on_floor():
@@ -606,10 +665,11 @@ func _physics_process(delta: float) -> void:
 	
 	last_velocity = velocity
 	
-	if player_height < water_surface_height:
-		
+	if player_height <= water_surface_height:
+		node_2d.visible = true
 		water_entered = true
 	else:
+		node_2d.visible = false
 		water_entered = false
 	
 	if Input.is_action_pressed("swim") and water_entered:
@@ -622,6 +682,7 @@ func _physics_process(delta: float) -> void:
 	
 	
 	move_and_slide()
+	
 	snap_down_to_stairs_check()
 	
 	for i in get_slide_collision_count():
@@ -636,7 +697,7 @@ func hurt(damage : float):
 	health_bar.value = current_health
 	
 	if health_bar.value <= 0:
-		print(health_bar.value)
+		
 		get_tree().reload_current_scene()
 	
 	hurt_overlay.modulate = Color.WHITE
@@ -646,14 +707,15 @@ func hurt(damage : float):
 	hurt_tween.tween_property(hurt_overlay, "modulate", Color.TRANSPARENT, 0.5)
 	
 
+	
 
 # Handle water entry
 func _on_sound_detection_body_entered(body: Node3D) -> void:
-	if body == box:
+	if body.name == "box" or body.name == "box2":
 		
 		object_splash.play()
 		if body is RigidBody3D:
-			body.gravity_scale = 0  # Disable gravity while it's underwater
+			body.gravity_scale = 0  
 			body.apply_impulse(Vector3.ZERO, buoyancy_force)
 
 	if body.name == "player":
@@ -667,7 +729,7 @@ func _on_water_surface_changed(new_height: float):
 
 # Handle water exit
 func _on_sound_detection_body_exited(body: Node3D) -> void:
-	if body == box:
+	if body.name == "box" or body.name == "box2":
 		
 		if body is RigidBody3D:
 			body.gravity_scale = 1  # Restore gravity when it exits the water
@@ -688,11 +750,13 @@ func rise_water() -> void:
 		await get_tree().create_timer(0.0).timeout
 
 func _on_particle_detection_body_entered(body: Node3D) -> void:
+	
+	
 	if body.name == "player":
-		
+		print("water is rising")
 		rise_water()
-	elif body.name == "box":
-		print("box entered sphere")
+	
+	
 
 
 
@@ -721,6 +785,7 @@ func _on_area_3d_body_entered(body: Node3D) -> void:
 
 func _on_area_3d_body_exited(body: Node3D) -> void:
 	if body.name == "box":
+		print("yeahaha")
 		body.set_collision_layer_value(1, false)
 		body.set_collision_layer_value(2, true)
 		box_has_touched = false
@@ -730,14 +795,14 @@ func _on_body_collided(body):
 	box_has_collided = true
 
 func _on_body_exited(body):
-	print("Box left the wall!")
+	pass
 	
 
 
 ##nonstick wall detection
 func _on_stickdetection_body_entered(body: Node3D) -> void:
 	if body.name == "player":
-		print("function call")
+		print("nonstick wall")
 		wallrunning = false
 		wall_run_timer = 0.0
 		wall_run_bar.value = 0.0
@@ -745,7 +810,7 @@ func _on_stickdetection_body_entered(body: Node3D) -> void:
 		wall_run_retry_timer = wall_run_retry_cooldown
 		
 		can_wall_jump = false
-		print("Nonstick wall detected")
+		
 
 ##nonstick wall detection exited
 func _on_stickdetection_body_exited(body: Node3D) -> void:
@@ -772,6 +837,7 @@ func _on_ropedetection_body_entered(body: Node3D) -> void:
 		
 		can_swing = true
 		
+		
 			
 
 
@@ -782,5 +848,9 @@ func _on_ropedetection_body_entered(body: Node3D) -> void:
 
 
 func _on_boxdetection_body_entered(body: Node3D) -> void:
-	if body.name == "box":
+	if body.name == "box" or body.name == "box2":
 		remove_object()
+
+
+func _on_stickdetection_body_shape_exited(body_rid: RID, body: Node3D, body_shape_index: int, local_shape_index: int) -> void:
+	pass # Replace with function body.
