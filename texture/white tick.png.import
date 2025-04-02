@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b4gw84pk24cei"
-path="res://.godot/imported/entrance-door_atlas.png-5f052059f5884f80bf746bd12981c5c8.ctex"
+uid="uid://bboh6cky7frdf"
+path="res://.godot/imported/white tick.png-c07c7c9d1c3eea15212ae9084a3b12fa.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://scenes/entrance-door_atlas.png"
-dest_files=["res://.godot/imported/entrance-door_atlas.png-5f052059f5884f80bf746bd12981c5c8.ctex"]
+source_file="res://texture/white tick.png"
+dest_files=["res://.godot/imported/white tick.png-c07c7c9d1c3eea15212ae9084a3b12fa.ctex"]
 
 [params]
 

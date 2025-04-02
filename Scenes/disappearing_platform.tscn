@@ -2,9 +2,9 @@
 
 [ext_resource type="Script" path="res://scenes/disappearing_platform.gd" id="1_05bon"]
 [ext_resource type="Texture2D" uid="uid://ckrsj5go8ckwh" path="res://assets/textures/dev/grids/Dark/texture_07.png" id="1_ccpkh"]
-[ext_resource type="AudioStream" path="res://sound effects/Rockfall1.wav" id="3_3tri7"]
-[ext_resource type="AudioStream" path="res://sound effects/Rockfall2.wav" id="4_e6dbr"]
-[ext_resource type="AudioStream" path="res://sound effects/DesignedAxe2.wav" id="5_qeh51"]
+[ext_resource type="AudioStream" uid="uid://d1iva6ojiype4" path="res://sound effects/Rockfall1.wav" id="3_3tri7"]
+[ext_resource type="AudioStream" uid="uid://c7js3w70vhgrg" path="res://sound effects/Rockfall2.wav" id="4_e6dbr"]
+[ext_resource type="AudioStream" uid="uid://flqsugmymbvk" path="res://sound effects/DesignedAxe2.wav" id="5_qeh51"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_w6ahr"]
 size = Vector3(2.49402, 0.512604, 2.27307)

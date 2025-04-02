@@ -17,7 +17,7 @@
 [ext_resource type="Texture2D" uid="uid://b5rrqx8fn3u7o" path="res://assets/textures/hurtoverlay/hurt.png" id="15_gck5b"]
 [ext_resource type="AudioStream" uid="uid://bpoul6eiat67q" path="res://sound effects/HumanInjured2.wav" id="16_islp1"]
 [ext_resource type="Script" path="res://scenes/water.gd" id="17_0ats7"]
-[ext_resource type="AudioStream" path="res://sound effects/ropeswinging.mp3" id="17_hcve2"]
+[ext_resource type="AudioStream" uid="uid://1vvsh455y4j0" path="res://sound effects/ropeswinging.mp3" id="17_hcve2"]
 [ext_resource type="AudioStream" uid="uid://bycd4qj6hl0i2" path="res://sound effects/CoastalWavesOnRocksLoop.wav" id="18_qrwpu"]
 [ext_resource type="Texture2D" uid="uid://1avw8r08vy6a" path="res://kenney_crosshair-pack/PNG/White/crosshair020.png" id="19_by0wa"]
 [ext_resource type="Texture2D" uid="uid://ckrsj5go8ckwh" path="res://assets/textures/dev/grids/Dark/texture_07.png" id="20_lupgh"]

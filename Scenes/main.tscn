@@ -22,7 +22,7 @@
 [ext_resource type="Script" path="res://scenes/pickupdetection.gd" id="17_ifdqx"]
 [ext_resource type="Texture2D" uid="uid://1avw8r08vy6a" path="res://kenney_crosshair-pack/PNG/White/crosshair020.png" id="18_5m1h5"]
 [ext_resource type="PackedScene" uid="uid://cibbfh1e27e8b" path="res://scenes/floor_button.tscn" id="18_p4eqq"]
-[ext_resource type="AudioStream" path="res://sound effects/ropeswinging.mp3" id="18_whypx"]
+[ext_resource type="AudioStream" uid="uid://1vvsh455y4j0" path="res://sound effects/ropeswinging.mp3" id="18_whypx"]
 [ext_resource type="AudioStream" uid="uid://dfyxkoatqbjd5" path="res://sound effects/music/Tomb of Tides In Game.wav" id="20_do3yu"]
 [ext_resource type="Script" path="res://Scenes/spinning_sphere.gd" id="21_2legu"]
 [ext_resource type="Script" path="res://scenes/ropeaccess.gd" id="24_36q5y"]

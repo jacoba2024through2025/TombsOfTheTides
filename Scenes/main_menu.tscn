@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://Scenes/main_menu.gd" id="1_tg5yt"]
 [ext_resource type="Texture2D" uid="uid://dw5jd84o6801p" path="res://assets/hdris/kloofendal_48d_partly_cloudy_puresky_2k.hdr" id="2_6den5"]
 [ext_resource type="Script" path="res://Scenes/menu.gd" id="9_0nyax"]
-[ext_resource type="Texture2D" path="res://images/Tomb of the Tides icon.png" id="10_2g4oa"]
+[ext_resource type="Texture2D" uid="uid://bjulkx6ps508m" path="res://images/Tomb of the Tides icon.png" id="10_2g4oa"]
 [ext_resource type="AudioStream" uid="uid://c2kciax0y82ea" path="res://sound effects/music/Tomb of Tides Start Menu.wav" id="10_45v17"]
 [ext_resource type="AudioStream" uid="uid://gk8vnadl57jy" path="res://sound effects/UI SFX/select_007.ogg" id="10_y0tyn"]
 [ext_resource type="AudioStream" uid="uid://jrikuxdh8hko" path="res://sound effects/UI SFX/click_001.ogg" id="11_ldjg7"]
@@ -201,6 +201,7 @@ Button/styles/normal = SubResource("StyleBoxFlat_871m5")
 
 [sub_resource type="SystemFont" id="SystemFont_7edd5"]
 font_names = PackedStringArray("Black Ops One")
+subpixel_positioning = 0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vhmiv"]
 bg_color = Color(0.529412, 0.145098, 0.231373, 1)
@@ -221,6 +222,7 @@ Button/styles/normal = SubResource("StyleBoxFlat_vhmiv")
 
 [sub_resource type="SystemFont" id="SystemFont_jk16b"]
 font_names = PackedStringArray("Black Ops One")
+subpixel_positioning = 0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l4twq"]
 bg_color = Color(0.419608, 0.109804, 0.172549, 1)
@@ -252,8 +254,9 @@ Button/styles/normal = SubResource("StyleBoxFlat_mqy5p")
 
 [sub_resource type="SystemFont" id="SystemFont_gxfvu"]
 font_names = PackedStringArray("Black Ops One")
+subpixel_positioning = 0
 
-[node name="world" type="Node3D"]
+[node name="world2" type="Node3D"]
 script = ExtResource("1_tg5yt")
 
 [node name="stage" type="Node3D" parent="."]
@@ -396,6 +399,12 @@ size_flags_vertical = 4
 script = ExtResource("9_0nyax")
 
 [node name="Sprite2D" type="Sprite2D" parent="VBoxContainer"]
+texture_filter = 1
+position = Vector2(197, -80)
+scale = Vector2(0.725, 0.576389)
+texture = ExtResource("10_2g4oa")
+
+[node name="Sprite2D2" type="Sprite2D" parent="VBoxContainer"]
 texture_filter = 1
 position = Vector2(197, -80)
 scale = Vector2(0.725, 0.576389)

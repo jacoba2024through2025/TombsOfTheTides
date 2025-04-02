@@ -1,8 +1,8 @@
 [gd_scene load_steps=14 format=3 uid="uid://dttp4kpxp6kw3"]
 
 [ext_resource type="Script" path="res://scenes/floor_button_2.gd" id="1_22olj"]
-[ext_resource type="AudioStream" path="res://sound effects/SwitchButton2_On.wav" id="2_ag6jy"]
-[ext_resource type="AudioStream" path="res://sound effects/SwitchButton2_Off.wav" id="3_04a0l"]
+[ext_resource type="AudioStream" uid="uid://cjbi1f8yawnwl" path="res://sound effects/SwitchButton2_On.wav" id="2_ag6jy"]
+[ext_resource type="AudioStream" uid="uid://l20m7y7pui" path="res://sound effects/SwitchButton2_Off.wav" id="3_04a0l"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_yeunm"]
 
