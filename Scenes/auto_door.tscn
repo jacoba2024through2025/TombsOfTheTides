@@ -1,0 +1,40 @@
+[gd_scene load_steps=7 format=3 uid="uid://dctw8kheximmg"]
+
+[ext_resource type="Script" path="res://scripts/auto_door.gd" id="1_a0f60"]
+[ext_resource type="AudioStream" uid="uid://bjhvdde3pkgsq" path="res://sound effects/Hammer1.wav" id="2_s7cte"]
+[ext_resource type="AudioStream" uid="uid://cw3aen5vybx14" path="res://sound effects/Hammer3.wav" id="3_w05tu"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_v3ava"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_e1fsj"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ra8y5"]
+size = Vector3(2.49292, 3.50078, 2.6)
+
+[node name="Auto_door" type="Node3D"]
+script = ExtResource("1_a0f60")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+transform = Transform3D(2.5, 0, 0, 0, 3.5, 0, 0, 0, 0.5, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_v3ava")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+mesh = SubResource("BoxMesh_e1fsj")
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00524902, 0.00087887, 0.0197266)
+shape = SubResource("BoxShape3D_ra8y5")
+
+[node name="opensound" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("2_s7cte")
+volume_db = 17.688
+
+[node name="closesound" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_w05tu")
+
+[connection signal="body_entered" from="Area3D" to="." method="enter_trigger"]
+[connection signal="body_exited" from="Area3D" to="." method="exit_trigger"]

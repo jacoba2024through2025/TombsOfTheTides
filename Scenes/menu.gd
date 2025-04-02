@@ -1,12 +1,13 @@
 extends VBoxContainer
 
-const MAIN = preload("res://Scenes/main.tscn")
+#const MAIN = preload("res://Scenes/main.tscn")
+const SPAWN = preload("res://scenes/spawn.tscn")
 @onready var click: AudioStreamPlayer3D = $NewGameButton/Click
 @onready var CONTROLS = load("res://scenes/input_settings.tscn")
 
 
 func _on_new_game_button_pressed() -> void:
-	get_tree().change_scene_to_packed(MAIN)
+	get_tree().change_scene_to_packed(SPAWN)
 	
 	
 

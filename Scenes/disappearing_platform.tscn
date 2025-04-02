@@ -1,0 +1,53 @@
+[gd_scene load_steps=10 format=3 uid="uid://c5mwcrsupyol8"]
+
+[ext_resource type="Script" path="res://scenes/disappearing_platform.gd" id="1_05bon"]
+[ext_resource type="Texture2D" uid="uid://ckrsj5go8ckwh" path="res://assets/textures/dev/grids/Dark/texture_07.png" id="1_ccpkh"]
+[ext_resource type="AudioStream" uid="uid://d1iva6ojiype4" path="res://sound effects/Rockfall1.wav" id="3_3tri7"]
+[ext_resource type="AudioStream" uid="uid://c7js3w70vhgrg" path="res://sound effects/Rockfall2.wav" id="4_e6dbr"]
+[ext_resource type="AudioStream" uid="uid://flqsugmymbvk" path="res://sound effects/DesignedAxe2.wav" id="5_qeh51"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_w6ahr"]
+size = Vector3(2.49402, 0.512604, 2.27307)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mjeok"]
+albedo_texture = ExtResource("1_ccpkh")
+
+[sub_resource type="BoxMesh" id="BoxMesh_tuxe8"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cekoe"]
+size = Vector3(1, 1.2179, 1)
+
+[node name="disappearing_platform" type="StaticBody3D"]
+script = ExtResource("1_05bon")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00286865, 0.00642395, 0.000793457)
+shape = SubResource("BoxShape3D_w6ahr")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(2.48626, 0, 0, 0, 0.5, 0, 0, 0, 2.26753, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_mjeok")
+mesh = SubResource("BoxMesh_tuxe8")
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(2.51459, 0, 0, 0, 0.510494, 0, 0, 0, 2.2846, 0, 0.0556172, 0)
+shape = SubResource("BoxShape3D_cekoe")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 2.0
+
+[node name="rockfall1" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_3tri7")
+
+[node name="rockfall2" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("4_e6dbr")
+
+[node name="boomsound" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("5_qeh51")
+volume_db = 12.655
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
+[connection signal="body_exited" from="Area3D" to="." method="_on_area_3d_body_exited"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

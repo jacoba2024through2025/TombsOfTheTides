@@ -1,9 +1,10 @@
-[gd_scene load_steps=29 format=3 uid="uid://sucxe3px6gj3"]
+[gd_scene load_steps=40 format=3 uid="uid://sucxe3px6gj3"]
 
 [ext_resource type="Texture2D" uid="uid://ckrsj5go8ckwh" path="res://assets/textures/dev/grids/Dark/texture_07.png" id="1_0gx5a"]
 [ext_resource type="Script" path="res://Scenes/main_menu.gd" id="1_tg5yt"]
 [ext_resource type="Texture2D" uid="uid://dw5jd84o6801p" path="res://assets/hdris/kloofendal_48d_partly_cloudy_puresky_2k.hdr" id="2_6den5"]
 [ext_resource type="Script" path="res://Scenes/menu.gd" id="9_0nyax"]
+[ext_resource type="Texture2D" uid="uid://bjulkx6ps508m" path="res://images/Tomb of the Tides icon.png" id="10_2g4oa"]
 [ext_resource type="AudioStream" uid="uid://c2kciax0y82ea" path="res://sound effects/music/Tomb of Tides Start Menu.wav" id="10_45v17"]
 [ext_resource type="AudioStream" uid="uid://gk8vnadl57jy" path="res://sound effects/UI SFX/select_007.ogg" id="10_y0tyn"]
 [ext_resource type="AudioStream" uid="uid://jrikuxdh8hko" path="res://sound effects/UI SFX/click_001.ogg" id="11_ldjg7"]
@@ -170,7 +171,86 @@ material = SubResource("ShaderMaterial_kox3b")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_tjkvi"]
 
-[sub_resource type="SystemFont" id="SystemFont_6q3sw"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jcwkq"]
+bg_color = Color(0.419608, 0.109804, 0.172549, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.0784314, 0.0784314, 0.776471, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_871m5"]
+bg_color = Color(0.529412, 0.145098, 0.231373, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.290196, 0.52549, 0.909804, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="Theme" id="Theme_j5mgb"]
+Button/styles/hover = SubResource("StyleBoxFlat_jcwkq")
+Button/styles/normal = SubResource("StyleBoxFlat_871m5")
+
+[sub_resource type="SystemFont" id="SystemFont_7edd5"]
+font_names = PackedStringArray("Black Ops One")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vhmiv"]
+bg_color = Color(0.529412, 0.145098, 0.231373, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.290196, 0.52549, 0.909804, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="Theme" id="Theme_xqxuy"]
+Button/styles/hover = SubResource("StyleBoxFlat_jcwkq")
+Button/styles/hover_pressed_mirrored = null
+Button/styles/normal = SubResource("StyleBoxFlat_vhmiv")
+
+[sub_resource type="SystemFont" id="SystemFont_jk16b"]
+font_names = PackedStringArray("Black Ops One")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l4twq"]
+bg_color = Color(0.419608, 0.109804, 0.172549, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.0784314, 0.0784314, 0.776471, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mqy5p"]
+bg_color = Color(0.529412, 0.145098, 0.231373, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.290196, 0.52549, 0.909804, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="Theme" id="Theme_pcasd"]
+Button/styles/hover = SubResource("StyleBoxFlat_l4twq")
+Button/styles/normal = SubResource("StyleBoxFlat_mqy5p")
+
+[sub_resource type="SystemFont" id="SystemFont_gxfvu"]
 font_names = PackedStringArray("Black Ops One")
 
 [node name="world" type="Node3D"]
@@ -305,18 +385,30 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -173.0
-offset_top = -98.5
-offset_right = 173.0
-offset_bottom = 98.5
+offset_left = -178.0
+offset_top = -95.0
+offset_right = 185.0
+offset_bottom = 102.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("9_0nyax")
 
+[node name="Sprite2D" type="Sprite2D" parent="VBoxContainer"]
+texture_filter = 1
+position = Vector2(197, -80)
+scale = Vector2(0.725, 0.576389)
+texture = ExtResource("10_2g4oa")
+
 [node name="NewGameButton" type="Button" parent="VBoxContainer"]
+texture_filter = 1
 layout_mode = 2
+theme = SubResource("Theme_j5mgb")
+theme_override_colors/font_hover_color = Color(0.290196, 0.52549, 0.909804, 1)
+theme_override_colors/font_color = Color(0.0784314, 0.0784314, 0.776471, 1)
+theme_override_constants/outline_size = 8
+theme_override_fonts/font = SubResource("SystemFont_7edd5")
 theme_override_font_sizes/font_size = 40
 text = "Play Game"
 
@@ -328,12 +420,24 @@ volume_db = 15.0
 stream = ExtResource("11_ldjg7")
 
 [node name="LoadButton" type="Button" parent="VBoxContainer"]
+texture_filter = 1
 layout_mode = 2
+theme = SubResource("Theme_xqxuy")
+theme_override_colors/font_hover_color = Color(0.290196, 0.52549, 0.909804, 1)
+theme_override_colors/font_color = Color(0.0784314, 0.0784314, 0.776471, 1)
+theme_override_constants/outline_size = 8
+theme_override_fonts/font = SubResource("SystemFont_jk16b")
 theme_override_font_sizes/font_size = 40
 text = "Controls/Keybinds"
 
 [node name="QuitButton" type="Button" parent="VBoxContainer"]
+texture_filter = 1
 layout_mode = 2
+theme = SubResource("Theme_pcasd")
+theme_override_colors/font_hover_color = Color(0.290196, 0.52549, 0.909804, 1)
+theme_override_colors/font_color = Color(0.0784314, 0.0784314, 0.776471, 1)
+theme_override_constants/outline_size = 8
+theme_override_fonts/font = SubResource("SystemFont_gxfvu")
 theme_override_font_sizes/font_size = 40
 text = "Quit Game"
 
@@ -345,20 +449,6 @@ transform = Transform3D(-0.34937, -0.233615, 0.907394, -0.0839409, 0.972329, 0.2
 [node name="main_menu_music" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("10_45v17")
 volume_db = 4.76
-
-[node name="Label" type="Label" parent="."]
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -386.0
-offset_top = 65.0
-offset_right = 386.0
-offset_bottom = 166.0
-grow_horizontal = 2
-theme_override_constants/outline_size = 31
-theme_override_fonts/font = SubResource("SystemFont_6q3sw")
-theme_override_font_sizes/font_size = 80
-text = "Tomb Of The Tides"
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 

@@ -18,10 +18,15 @@ config/icon="res://icon.svg"
 [autoload]
 
 ConfigFileHandler="*res://scripts/ConfigFileHandler.gd"
+Global="*res://scripts/global.gd"
 
 [display]
 
 window/size/mode=2
+
+[filesystem]
+
+import/blender/enabled=false
 
 [input]
 
