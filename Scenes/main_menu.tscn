@@ -253,7 +253,7 @@ Button/styles/normal = SubResource("StyleBoxFlat_mqy5p")
 [sub_resource type="SystemFont" id="SystemFont_gxfvu"]
 font_names = PackedStringArray("Black Ops One")
 
-[node name="world" type="Node3D"]
+[node name="world2" type="Node3D"]
 script = ExtResource("1_tg5yt")
 
 [node name="stage" type="Node3D" parent="."]

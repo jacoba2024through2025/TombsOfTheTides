@@ -23,7 +23,7 @@
 [ext_resource type="Texture2D" uid="uid://ckrsj5go8ckwh" path="res://assets/textures/dev/grids/Dark/texture_07.png" id="20_lupgh"]
 [ext_resource type="PackedScene" uid="uid://c7pwtbte6ee8d" path="res://scenes/pause_menu.tscn" id="21_vwx0q"]
 [ext_resource type="Script" path="res://Scenes/spinning_sphere.gd" id="23_jlicj"]
-[ext_resource type="PackedScene" uid="uid://dswt2yrbwgqyr" path="res://scenes/water.tscn" id="24_4w0kn"]
+[ext_resource type="PackedScene" uid="uid://dxcmllroewd37" path="res://scenes/water.tscn" id="24_4w0kn"]
 [ext_resource type="AudioStream" uid="uid://c2kciax0y82ea" path="res://sound effects/music/Tomb of Tides Start Menu.wav" id="26_h77f6"]
 
 [sub_resource type="GDScript" id="GDScript_s14e4"]

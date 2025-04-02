@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://c5mwcrsupyol8"]
+[gd_scene load_steps=10 format=3 uid="uid://ccw7bhu1ragkx"]
 
 [ext_resource type="Script" path="res://scenes/disappearing_platform.gd" id="1_05bon"]
 [ext_resource type="Texture2D" uid="uid://ckrsj5go8ckwh" path="res://assets/textures/dev/grids/Dark/texture_07.png" id="1_ccpkh"]

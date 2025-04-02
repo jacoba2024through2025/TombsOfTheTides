@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dctw8kheximmg"]
+[gd_scene load_steps=7 format=3 uid="uid://ddbd44df1vkrm"]
 
 [ext_resource type="Script" path="res://scripts/auto_door.gd" id="1_a0f60"]
 [ext_resource type="AudioStream" uid="uid://bjhvdde3pkgsq" path="res://sound effects/Hammer1.wav" id="2_s7cte"]
