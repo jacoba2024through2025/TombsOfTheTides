@@ -1,4 +1,4 @@
-[gd_scene load_steps=93 format=3 uid="uid://k1nf1dhueuvi"]
+[gd_scene load_steps=95 format=3 uid="uid://k1nf1dhueuvi"]
 
 [ext_resource type="Texture2D" uid="uid://ckrsj5go8ckwh" path="res://assets/textures/dev/grids/Dark/texture_07.png" id="1_1ox7n"]
 [ext_resource type="Script" path="res://Scenes/main.gd" id="1_6kpv3"]
@@ -11,6 +11,7 @@
 [ext_resource type="AudioStream" uid="uid://cgvcec72hs3fh" path="res://sound effects/FoodPackagingDriedSoupBox2.wav" id="7_tbau1"]
 [ext_resource type="AudioStream" uid="uid://dsb405joff6ib" path="res://sound effects/WoodLogHandling2.wav" id="8_h7ovj"]
 [ext_resource type="AudioStream" uid="uid://dkib6prhrfy3j" path="res://sound effects/LargeBagHandling3.wav" id="9_nqawb"]
+[ext_resource type="PackedScene" uid="uid://k25k1j6ajwub" path="res://scenes/npc.tscn" id="10_0f653"]
 [ext_resource type="AudioStream" uid="uid://cdifw6n5m8e1o" path="res://sound effects/WaterSplash1.wav" id="10_dlfof"]
 [ext_resource type="Script" path="res://scenes/box.gd" id="10_pqk1r"]
 [ext_resource type="AudioStream" uid="uid://dwpqu5ibm67tm" path="res://sound effects/WoodLogHandling1.wav" id="11_41144"]
@@ -38,6 +39,7 @@
 [ext_resource type="PackedScene" uid="uid://coif6ybudyaht" path="res://scenes/moving_platform.tscn" id="36_ebous"]
 [ext_resource type="PackedScene" uid="uid://i28qdpdhckci" path="res://scenes/moving_wall.tscn" id="37_lxt0u"]
 [ext_resource type="PackedScene" uid="uid://ccw7bhu1ragkx" path="res://scenes/disappearing_platform.tscn" id="38_evvmf"]
+[ext_resource type="PackedScene" uid="uid://ddr5i07e4afxo" path="res://scenes/spike.tscn" id="39_04x1r"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_qqub3"]
 friction = 0.7
@@ -509,12 +511,12 @@ shape = SubResource("BoxShape3D_if72d")
 [node name="stage" type="Node3D" parent="."]
 
 [node name="floor2" type="CSGBox3D" parent="stage"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.04693, -0.5, 0.487296)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.04693, -0.5, -19.0127)
 layers = 3
 use_collision = true
 collision_layer = 3
 collision_mask = 3
-size = Vector3(32.1023, 1, 21)
+size = Vector3(32.1023, 1, 60)
 material = SubResource("StandardMaterial3D_dvn77")
 
 [node name="floor" type="CSGBox3D" parent="stage"]
@@ -756,6 +758,14 @@ use_collision = true
 collision_layer = 3
 collision_mask = 3
 size = Vector3(6, 0.563843, 2)
+material = SubResource("StandardMaterial3D_dvn77")
+
+[node name="wall21" type="CSGBox3D" parent="stage" groups=["wallsFloorsCeilings"]]
+transform = Transform3D(1.91069e-15, -1.31134e-07, 1, -1, -4.37114e-08, -3.82137e-15, 4.37114e-08, -1, -1.31134e-07, -11.5398, 2.42352, -20.1597)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(6, 0.563843, 12)
 material = SubResource("StandardMaterial3D_dvn77")
 
 [node name="floor10" type="CSGBox3D" parent="stage"]
@@ -1225,6 +1235,12 @@ curve = SubResource("Curve3D_2dohw")
 
 [node name="disappearing_platform" parent="." instance=ExtResource("38_evvmf")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.2, 1.2, 0)
+
+[node name="Spike" parent="." instance=ExtResource("39_04x1r")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
+
+[node name="NPC" parent="." instance=ExtResource("10_0f653")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.21375, -8)
 
 [connection signal="body_entered" from="box" to="box" method="_on_body_entered"]
 [connection signal="body_exited" from="box" to="player" method="_on_box_body_exited"]
