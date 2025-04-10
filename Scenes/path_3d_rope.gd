@@ -2,14 +2,14 @@ extends Path3D
 # Script by Elijah Martin/Palin_drome
 
 @export_range(1, 200, 1) var number_of_segments = 10
-@export_range(3, 50, 1) var mesh_sides = 6
+@export_range(3, 50, 1) var mesh_sides = 45
 @export var cable_thickness = 0.05
 @export var fixed_start_point = true
 @export var fixed_end_point = true
 @export var rigidbody_attached_to_start : RigidBody3D
 @export var rigidbody_attached_to_end : CharacterBody3D
 @export var material : Material
-@export var speed_factor : float = 0.7  # Adjust the speed of rope movement
+@export var speed_factor : float = .7  # Adjust the speed of rope movement
 
 @onready var mesh := $CSGPolygon3D
 @onready var distance = curve.get_baked_length()
@@ -135,7 +135,7 @@ func _physics_process(_delta: float) -> void:
 		var player_position = player.position
 		var rope_position = segments[number_of_segments - 1].position  # end point of the rope
 		# Smoothly move the player along the rope without altering the rope's geometry
-		player_position = lerp(player_position, rope_position, speed_factor * _delta)
+		player_position = lerp(player_position, rope_position, speed_factor * _delta )
 		player.position = player_position
 
 	

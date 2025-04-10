@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://x4xnc85khpl5"]
 
 [ext_resource type="Script" path="res://scenes/path_3d_rope.gd" id="1_fykgp"]
-[ext_resource type="Material" uid="uid://d0ipsjwsxv75" path="res://scenes/orange_rope.tres" id="2_f0htr"]
+[ext_resource type="Material" uid="uid://d0ipsjwsxv75" path="res://Scenes/orange_rope.tres" id="2_f0htr"]
 
 [sub_resource type="Curve3D" id="Curve3D_rsokh"]
 resource_local_to_scene = true
@@ -42,7 +42,7 @@ smooth_faces = true
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
 process_priority = 1
 process_physics_priority = 1
-transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, -27, 12, 0)
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 12, 11.53, -31)
 shape = SubResource("CylinderShape3D_wbcjh")
 
 [connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]

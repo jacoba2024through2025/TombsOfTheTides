@@ -1,4 +1,4 @@
-[gd_scene load_steps=52 format=3 uid="uid://c104gtjiljhbx"]
+[gd_scene load_steps=62 format=3 uid="uid://c104gtjiljhbx"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_jt6vw"]
 [ext_resource type="MeshLibrary" uid="uid://dwqh47sha048t" path="res://tiles.tres" id="2_tjf5d"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bxpbh4irvj3gp" path="res://Scenes/big-door.tscn" id="4_pavyc"]
 [ext_resource type="PackedScene" uid="uid://d0iv51m1yiht5" path="res://Scenes/block.tscn" id="5_5gc5a"]
 [ext_resource type="Script" path="res://scenes/box.gd" id="6_35nte"]
+[ext_resource type="Texture2D" uid="uid://b7mwpt57a8bte" path="res://assets/textures/box texture.png.png" id="6_entx5"]
 [ext_resource type="AudioStream" uid="uid://dwpqu5ibm67tm" path="res://sound effects/WoodLogHandling1.wav" id="7_wkcsh"]
 [ext_resource type="AudioStream" uid="uid://ccolx0f63u8ng" path="res://sound effects/FootstepsConcrete2.wav" id="8_3kkmd"]
 [ext_resource type="AudioStream" uid="uid://dgopdfvvmgjya" path="res://sound effects/HumanInjured5.wav" id="9_sxnjm"]
@@ -20,6 +21,11 @@
 [ext_resource type="AudioStream" uid="uid://bycd4qj6hl0i2" path="res://sound effects/CoastalWavesOnRocksLoop.wav" id="18_qrwpu"]
 [ext_resource type="Texture2D" uid="uid://1avw8r08vy6a" path="res://kenney_crosshair-pack/PNG/White/crosshair020.png" id="19_by0wa"]
 [ext_resource type="Texture2D" uid="uid://ckrsj5go8ckwh" path="res://assets/textures/dev/grids/Dark/texture_07.png" id="20_lupgh"]
+[ext_resource type="Texture2D" uid="uid://cx0jhmhxhpmgy" path="res://assets/textures/dev/grids/Orange/texture_05.png" id="21_qmf7w"]
+[ext_resource type="PackedScene" uid="uid://us0d318yheks" path="res://platform_dirt.tscn" id="22_g51v5"]
+[ext_resource type="PackedScene" uid="uid://x4xnc85khpl5" path="res://Scenes/path_3d_rope.tscn" id="23_k8ogm"]
+[ext_resource type="PackedScene" uid="uid://xbstjpcausjb" path="res://sign.tscn" id="24_s2q7m"]
+[ext_resource type="MeshLibrary" uid="uid://ovi4tpduubxe" path="res://sewer-assets.tres" id="26_feod6"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_m3okb"]
 panorama = ExtResource("3_m3uju")
@@ -36,10 +42,12 @@ tonemap_mode = 2
 friction = 0.7
 rough = true
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d1k7u"]
-albedo_color = Color(1, 0.647059, 0, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vvnjm"]
+albedo_texture = ExtResource("6_entx5")
+uv1_scale = Vector3(1.8, 1.8, 1.8)
 
 [sub_resource type="BoxMesh" id="BoxMesh_t22yf"]
+material = SubResource("StandardMaterial3D_vvnjm")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ek3dh"]
 
@@ -305,6 +313,30 @@ material = SubResource("ShaderMaterial_kox3b")
 albedo_texture = ExtResource("20_lupgh")
 uv1_triplanar = true
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hr1lk"]
+albedo_texture = ExtResource("21_qmf7w")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qmjad"]
+size = Vector3(0.130273, 3.66228, 19.8871)
+
+[sub_resource type="Curve3D" id="Curve3D_u7kog"]
+resource_local_to_scene = true
+bake_interval = 512.0
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5),
+"tilts": PackedFloat32Array(0, 0)
+}
+point_count = 2
+
+[sub_resource type="Curve3D" id="Curve3D_8phdr"]
+resource_local_to_scene = true
+bake_interval = 512.0
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5),
+"tilts": PackedFloat32Array(0, 0)
+}
+point_count = 2
+
 [node name="World" type="Node3D"]
 
 [node name="GridMap" type="GridMap" parent="."]
@@ -384,8 +416,44 @@ transform = Transform3D(0.0880424, 0.990894, -3.3819, 1.35402e-08, 0.990985, 3.3
 [node name="block18" parent="." instance=ExtResource("5_5gc5a")]
 transform = Transform3D(-2.18557e-07, 0.735006, -2.60551, 0, 0.763784, 2.50734, 5, 3.21281e-08, -1.13891e-07, 6.82764, 7.62628, -8.83094)
 
+[node name="block19" parent="." instance=ExtResource("5_5gc5a")]
+transform = Transform3D(-8.74228e-08, 2, 8.74228e-08, 0, -8.74228e-08, 2, 2, 8.74228e-08, 3.82137e-15, 0, 3.15109, 18)
+
+[node name="block20" parent="." instance=ExtResource("5_5gc5a")]
+transform = Transform3D(-8.74228e-08, -2, 8.74228e-08, 0, -8.74228e-08, -2, 2, -8.74228e-08, 3.82137e-15, 0.302179, 1.61996, 21)
+
+[node name="block21" parent="." instance=ExtResource("5_5gc5a")]
+transform = Transform3D(3.82137e-15, 2, 8.74228e-08, 8.74228e-08, -8.74228e-08, 2, 2, 0, -8.74228e-08, 0, 0.146692, 22.548)
+
+[node name="block22" parent="." instance=ExtResource("5_5gc5a")]
+transform = Transform3D(-8.74228e-08, 2, 8.74228e-08, 0, -8.74228e-08, 2, 2, 8.74228e-08, 3.82137e-15, 0, -1.35736, 24.003)
+
+[node name="block23" parent="." instance=ExtResource("5_5gc5a")]
+transform = Transform3D(-3.09086e-08, 0.707107, -0.707107, 3.09086e-08, 0.707107, 0.707107, 1, 0, -4.37114e-08, -1.03927, -1.90268, 24.0189)
+
+[node name="block24" parent="." instance=ExtResource("5_5gc5a")]
+transform = Transform3D(-3.09086e-08, -0.707107, -0.707107, -3.09086e-08, 0.707107, -0.707107, 1, 0, -4.37114e-08, 1.13982, -2, 24)
+
+[node name="block25" parent="." instance=ExtResource("5_5gc5a")]
+transform = Transform3D(-3.09086e-08, 0.707107, -0.707107, 3.09086e-08, 0.707107, 0.707107, 1, 0, -4.37114e-08, -1.47428, -0.842197, 22.52)
+
+[node name="block26" parent="." instance=ExtResource("5_5gc5a")]
+transform = Transform3D(-3.09086e-08, 0.707107, -0.707107, 3.09086e-08, 0.707107, 0.707107, 1, 0, -4.37114e-08, -1.12725, 1.01499, 21)
+
+[node name="block27" parent="." instance=ExtResource("5_5gc5a")]
+transform = Transform3D(3.09086e-08, 0.707106, 0.707107, 3.09086e-08, -0.707107, 0.707106, 1, 1.53837e-15, -4.37114e-08, 1.53524, 0.582807, 21)
+
+[node name="block28" parent="." instance=ExtResource("5_5gc5a")]
+transform = Transform3D(-3.09086e-08, -0.707106, -0.707106, -3.09086e-08, 0.707106, -0.707106, 0.999999, 0, -4.37114e-08, 1.24637, -0.633831, 22.5184)
+
+[node name="block29" parent="." instance=ExtResource("5_5gc5a")]
+transform = Transform3D(-3.09086e-08, 0.707106, -0.707106, 3.09086e-08, 0.707106, 0.707106, 0.999998, 0, -4.37113e-08, -1.61447, 2.01672, 18.0086)
+
+[node name="block30" parent="." instance=ExtResource("5_5gc5a")]
+transform = Transform3D(-3.09085e-08, -0.707104, -0.707104, -3.09085e-08, 0.707104, -0.707104, 0.999997, 0, -4.37112e-08, 1.25582, 2.39184, 18)
+
 [node name="box" type="RigidBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.5854, 5.14211, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0788307, -4.06321, 51.2283)
 collision_layer = 2
 mass = 8.0
 physics_material_override = SubResource("PhysicsMaterial_x0pf0")
@@ -395,7 +463,6 @@ script = ExtResource("6_35nte")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="box"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.23411, 0)
-material_override = SubResource("StandardMaterial3D_d1k7u")
 mesh = SubResource("BoxMesh_t22yf")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="box"]
@@ -660,6 +727,182 @@ collision_mask = 3
 size = Vector3(50, 1, 29)
 material = SubResource("StandardMaterial3D_6efh1")
 
+[node name="wall15" type="CSGBox3D" parent="." groups=["wallsFloorsCeilings"]]
+transform = Transform3D(-1, -1.98421e-09, 1.33118e-07, 1.33118e-07, -7.72948e-15, 1, -1.9842e-09, 1, 1.5099e-14, -0.5, -1.5, -54.4751)
+visible = false
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(47, 1, 12)
+material = SubResource("StandardMaterial3D_6efh1")
+
+[node name="wall16" type="CSGBox3D" parent="." groups=["wallsFloorsCeilings"]]
+transform = Transform3D(1, 1.35103e-07, -1.35103e-07, 1.35103e-07, -4.37114e-08, 1, 1.35103e-07, -1, -4.37114e-08, -0.704422, -1.54772, -17.6825)
+visible = false
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(47, 1, 12)
+material = SubResource("StandardMaterial3D_6efh1")
+
+[node name="non-stick-wall" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 1.06581e-14, 0, 1, 0, -1.06581e-14, 0, 1, 1.50672, 7.28385, -36.064)
+visible = false
+size = Vector3(0.0380859, 3.98193, 35.455)
+material = SubResource("StandardMaterial3D_hr1lk")
+
+[node name="stickdetection" type="Area3D" parent="non-stick-wall"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="non-stick-wall/stickdetection"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0348625, 0.0816693, -0.0567665)
+shape = SubResource("BoxShape3D_qmjad")
+
+[node name="non-stick-wall2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 2.13162e-14, 0, 1, 0, -2.13162e-14, 0, 1, 22.4621, 8.33101, -43.0076)
+visible = false
+size = Vector3(0.0380859, 3.98193, 20.3754)
+material = SubResource("StandardMaterial3D_hr1lk")
+
+[node name="stickdetection" type="Area3D" parent="non-stick-wall2"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="non-stick-wall2/stickdetection"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0348625, 0.0816689, 0.00954819)
+shape = SubResource("BoxShape3D_qmjad")
+
+[node name="platform_dirt" parent="." instance=ExtResource("22_g51v5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.5059, 4.52959, -28.0029)
+
+[node name="platform_dirt2" parent="." instance=ExtResource("22_g51v5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.0462, 11.8846, -31.1187)
+
+[node name="platform_dirt3" parent="." instance=ExtResource("22_g51v5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.50591, 4.52959, -39.0029)
+
+[node name="platform_dirt4" parent="." instance=ExtResource("22_g51v5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.9276, 4.24513, -49.234)
+
+[node name="platform_dirt5" parent="." instance=ExtResource("22_g51v5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.2289, 12.1375, -44.7863)
+
+[node name="platform_dirt6" parent="." instance=ExtResource("22_g51v5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.125, 5.22999, -26.0834)
+
+[node name="platform_dirt7" parent="." instance=ExtResource("22_g51v5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.2527, 5.16356, -34.6948)
+
+[node name="platform_dirt8" parent="." instance=ExtResource("22_g51v5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.2529, 11.6822, -41.1196)
+
+[node name="platform_dirt9" parent="." instance=ExtResource("22_g51v5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.10639, 4.7885, -48.4012)
+
+[node name="Path3DRope" parent="." instance=ExtResource("23_k8ogm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.1165, 10.8908, -31.1949)
+curve = SubResource("Curve3D_u7kog")
+
+[node name="Path3DRope2" parent="." instance=ExtResource("23_k8ogm")]
+transform = Transform3D(0.232732, 0, 0.972541, 0, 1, 0, -0.972541, 0, 0.232732, -12.0828, 10.1237, -40.9308)
+curve = SubResource("Curve3D_8phdr")
+number_of_segments = 11
+
+[node name="Sign10" parent="." instance=ExtResource("24_s2q7m")]
+transform = Transform3D(0.562995, 0, 0.00239694, 0, 0.563, 0, -0.00239694, 0, 0.562995, 0.0847923, 4.68451, -58.3166)
+
+[node name="Label3D2" type="Label3D" parent="Sign10"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.13471, 0.143719)
+pixel_size = 0.0032
+text = "You win nothing."
+autowrap_mode = 3
+
+[node name="Sign9" parent="." instance=ExtResource("24_s2q7m")]
+transform = Transform3D(0.562999, 0, 0.00119847, 0, 0.563, 0, -0.00119847, 0, 0.562999, 14.1893, 4.61704, -55.7092)
+
+[node name="Label3D2" type="Label3D" parent="Sign9"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.13471, 0.143719)
+pixel_size = 0.0032
+text = "Great job!"
+autowrap_mode = 3
+
+[node name="Sign8" parent="." instance=ExtResource("24_s2q7m")]
+transform = Transform3D(0.562561, 0, -0.0222409, 0, 0.563, 0, 0.0222409, 0, 0.562561, -5.51775, 4.64044, -55.4121)
+
+[node name="Label3D2" type="Label3D" parent="Sign8"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.13471, 0.143719)
+pixel_size = 0.0032
+text = "Decent enough job "
+autowrap_mode = 3
+
+[node name="Sign7" parent="." instance=ExtResource("24_s2q7m")]
+transform = Transform3D(0.0354393, 0, -0.561884, 0, 0.563, 0, 0.561884, 0, 0.0354393, 22.3143, -7.29101, -34.7722)
+
+[node name="Label3D2" type="Label3D" parent="Sign7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.13471, 0.143719)
+pixel_size = 0.0032
+text = "-.-- --- ..- / .- .-. . / .- / -... ..- - - / .... . .- -.."
+autowrap_mode = 3
+
+[node name="Sign6" parent="." instance=ExtResource("24_s2q7m")]
+transform = Transform3D(-0.562235, 0, -0.0293474, 0, 0.563, 0, 0.0293474, 0, -0.562235, -15.7085, -7.20978, -18.3772)
+
+[node name="Label3D2" type="Label3D" parent="Sign6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.13471, 0.143719)
+pixel_size = 0.0032
+text = "get a life"
+autowrap_mode = 3
+
+[node name="Sign5" parent="." instance=ExtResource("24_s2q7m")]
+transform = Transform3D(0.563, 0, 0, 0, 0.563, 0, 0, 0, 0.563, -10.0502, 4.61037, -16.5634)
+
+[node name="Label3D2" type="Label3D" parent="Sign5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.13471, 0.143719)
+pixel_size = 0.0032
+text = "Your micriwave knows mandarin"
+autowrap_mode = 3
+
+[node name="Sign4" parent="." instance=ExtResource("24_s2q7m")]
+transform = Transform3D(0.563, 0, 0, 0, 0.563, 0, 0, 0, 0.563, 9.63155, 4.62194, -16.8398)
+
+[node name="Label3D2" type="Label3D" parent="Sign4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.13471, 0.143719)
+pixel_size = 0.0032
+text = "Your micriwave knows mandarin"
+autowrap_mode = 3
+
+[node name="Sign3" parent="." instance=ExtResource("24_s2q7m")]
+transform = Transform3D(0.563, 0, 0, 0, 0.563, 0, 0, 0, 0.563, 0, 4.65614, -16.7234)
+
+[node name="Label3D2" type="Label3D" parent="Sign3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.13471, 0.143719)
+pixel_size = 0.0032
+text = "Your micriwave knows mandarin"
+autowrap_mode = 3
+
+[node name="Sign" parent="." instance=ExtResource("24_s2q7m")]
+transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0, -5.70677, 42.2395)
+
+[node name="Label3D2" type="Label3D" parent="Sign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.13471, 0.143719)
+pixel_size = 0.0032
+text = "Hello [Insert player name here]. I'm sure you claim to know what you're doing. Don't disappoint."
+autowrap_mode = 3
+
+[node name="Sign2" parent="." instance=ExtResource("24_s2q7m")]
+transform = Transform3D(0.5625, 0, 0, 0, 0.5625, 0, 0, 0, 0.5625, 0, 0.109284, -0.244821)
+
+[node name="Label3D2" type="Label3D" parent="Sign2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.13471, 0.143719)
+pixel_size = 0.0032
+text = "Choose Your path wisely. 
+Your dicision matters."
+autowrap_mode = 3
+
+[node name="GridMap2" type="GridMap" parent="."]
+mesh_library = ExtResource("26_feod6")
+data = {
+"cells": PackedInt32Array(-196604, 27, 92, -196608, 27, 93, -196606, 25, 95, -131075, 26, 96, -196606, 28, 94)
+}
+metadata/_editor_floor_ = Vector3(0, -3, 0)
+
 [connection signal="body_entered" from="box" to="box" method="_on_body_entered"]
 [connection signal="finished" from="box/BoxImpact" to="box" method="_on_box_impact_finished"]
 [connection signal="body_entered" from="player/Area3D" to="player" method="_on_area_3d_body_entered"]
@@ -667,3 +910,7 @@ material = SubResource("StandardMaterial3D_6efh1")
 [connection signal="body_entered" from="player/ropedetection" to="player" method="_on_ropedetection_body_entered"]
 [connection signal="body_exited" from="player/ropedetection" to="player" method="_on_ropedetection_body_exited"]
 [connection signal="body_entered" from="player/feet/boxdetection" to="player" method="_on_boxdetection_body_entered"]
+[connection signal="body_entered" from="non-stick-wall/stickdetection" to="player" method="_on_stickdetection_body_entered"]
+[connection signal="body_exited" from="non-stick-wall/stickdetection" to="player" method="_on_stickdetection_body_exited"]
+[connection signal="body_entered" from="non-stick-wall2/stickdetection" to="player" method="_on_stickdetection_body_entered"]
+[connection signal="body_exited" from="non-stick-wall2/stickdetection" to="player" method="_on_stickdetection_body_exited"]

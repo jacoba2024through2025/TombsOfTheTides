@@ -388,7 +388,7 @@ func _physics_process(delta: float) -> void:
 		var total_points = path_points.size()
 		# Calculate the index based on the swing offset
 		var index = int((swing_offset + max_swinging_angle) / (2 * max_swinging_angle) * (total_points - 1))
-		index = clamp(index, 0, total_points - 1)
+		index = clamp(index, 0, total_points - 4)
 		# Get the position on the path
 		var position_on_path = path_points[index]
 		# Update the position of the CharacterBody3D
