@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://dwkxodvnfarh3"]
+
+[ext_resource type="Script" path="res://scenes/projectile_launcher.gd" id="1_waydo"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_55qfk"]
+
+[node name="ProjectileLauncher" type="Node3D"]
+script = ExtResource("1_waydo")
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_55qfk")

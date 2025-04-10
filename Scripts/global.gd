@@ -11,3 +11,7 @@ var boxStopping = false
 
 
 var ropeString = 0
+
+var spikeAttack = false
+
+var spikeShoot = false

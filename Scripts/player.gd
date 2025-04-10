@@ -190,7 +190,8 @@ func _play_footstep_audio():
 			footstep.pitch_scale = randf_range(0.5, 0.7)
 			footstep.play()
 func _process(delta: float) -> void:
-	
+	if Global.spikeAttack:
+		hurt(1)
 	
 	
 	if Global.boxStopping:
@@ -407,6 +408,9 @@ func snap_down_to_stairs_check():
 
 func _physics_process(delta: float) -> void:
 	
+	if Global.spikeShoot:
+		hurt(0.14)
+		
 	
 			
 	
@@ -697,7 +701,7 @@ func hurt(damage : float):
 	health_bar.value = current_health
 	
 	if health_bar.value <= 0:
-		
+		Global.spikeShoot = false
 		get_tree().reload_current_scene()
 	
 	hurt_overlay.modulate = Color.WHITE
