@@ -1,0 +1,61 @@
+[gd_scene load_steps=9 format=3 uid="uid://k25k1j6ajwub"]
+
+[ext_resource type="Script" path="res://scenes/npc.gd" id="1_sp7rr"]
+[ext_resource type="PackedScene" uid="uid://d1mhc2xluf5im" path="res://scenes/cone.tscn" id="2_bywju"]
+[ext_resource type="PackedScene" uid="uid://dwkxodvnfarh3" path="res://scenes/projectile_launcher.tscn" id="3_3ecu4"]
+[ext_resource type="AudioStream" uid="uid://cfb2uabcfj4w7" path="res://sound effects/DesignedGunshot_Pistol1_Reverb.wav" id="4_jjyih"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_2bl5w"]
+radius = 1.0
+height = 2.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x8uf1"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_cmcuw"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_e3guj"]
+points = PackedVector3Array(-0.000195742, 1, -0.000195742, 0.194988, -1, -0.980814, -0.000195742, -1, -1, -0.195184, -1, -0.980814, -0.382733, -1, -0.924041, -0.555599, -1, -0.831637, -0.707126, -1, -0.707126, -0.831637, -1, -0.555599, -0.924041, -1, -0.382733, -0.980814, -1, -0.195184, -1, -1, -0.000195742, -0.980814, -1, 0.194988, -0.924041, -1, 0.382537, -0.831637, -1, 0.555403, -0.707126, -1, 0.70693, -0.555599, -1, 0.831441, -0.382733, -1, 0.923845, -0.195184, -1, 0.980619, -0.000195742, -1, 1, 0.194988, -1, 0.980619, 0.382537, -1, 0.923845, 0.555403, -1, 0.831441, 0.70693, -1, 0.70693, 0.831441, -1, 0.555403, 0.923845, -1, 0.382537, 0.980619, -1, 0.194988, 1, -1, -0.000195742, 0.980619, -1, -0.195184, 0.923845, -1, -0.382733, 0.831441, -1, -0.555599, 0.70693, -1, -0.707126, 0.555403, -1, -0.831637, 0.382537, -1, -0.924041)
+
+[node name="NPC" type="Node3D"]
+script = ExtResource("1_sp7rr")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_2bl5w")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.990238)
+material_override = SubResource("StandardMaterial3D_x8uf1")
+mesh = SubResource("SphereMesh_cmcuw")
+
+[node name="VisionArea" type="Area3D" parent="."]
+
+[node name="Cone" parent="VisionArea" instance=ExtResource("2_bywju")]
+transform = Transform3D(10, 0, 0, 0, -4.37114e-07, -10, 0, 10, -4.37114e-07, 0, 0, -11.1431)
+visible = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="VisionArea"]
+transform = Transform3D(10, 0, 0, 0, -4.37114e-07, -10, 0, 10, -4.37114e-07, 0, 0, -11.1431)
+shape = SubResource("ConvexPolygonShape3D_e3guj")
+
+[node name="VisionTimer" type="Timer" parent="."]
+wait_time = 0.25
+autostart = true
+
+[node name="VisionRaycast" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.51149)
+target_position = Vector3(0, -1, -3000)
+debug_shape_custom_color = Color(1, 0, 0, 1)
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0753754, -1.42957)
+
+[node name="ProjectileLauncher" parent="Camera3D" instance=ExtResource("3_3ecu4")]
+
+[node name="turretsound" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("4_jjyih")
+
+[connection signal="timeout" from="VisionTimer" to="." method="_on_vision_timer_timeout"]

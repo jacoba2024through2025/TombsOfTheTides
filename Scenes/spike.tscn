@@ -1,0 +1,29 @@
+[gd_scene load_steps=6 format=3 uid="uid://ddr5i07e4afxo"]
+
+[ext_resource type="Script" path="res://scripts/spike.gd" id="1_ohc3c"]
+[ext_resource type="PackedScene" uid="uid://b4f74nxp52qd5" path="res://Models/SpikeTrap.blend" id="2_sd6cs"]
+[ext_resource type="AudioStream" uid="uid://d2gn5wd2qexd0" path="res://sound effects/DesignedPickaxe2.wav" id="3_kw5yk"]
+[ext_resource type="AudioStream" uid="uid://ce1qklnaoqkx0" path="res://sound effects/DesignedPickaxe3.wav" id="4_h0hvr"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wldtq"]
+size = Vector3(1.68408, 0.735687, 1.76083)
+
+[node name="Spike" type="Node3D"]
+script = ExtResource("1_ohc3c")
+
+[node name="SpikeTrap" parent="." instance=ExtResource("2_sd6cs")]
+
+[node name="Spikedetection" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Spikedetection"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0209961, 0.505661, 0.00306702)
+shape = SubResource("BoxShape3D_wldtq")
+
+[node name="SpikeUp" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_kw5yk")
+
+[node name="SpikeDown" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("4_h0hvr")
+
+[connection signal="body_entered" from="Spikedetection" to="." method="_on_spikedetection_body_entered"]
+[connection signal="body_exited" from="Spikedetection" to="." method="_on_spikedetection_body_exited"]

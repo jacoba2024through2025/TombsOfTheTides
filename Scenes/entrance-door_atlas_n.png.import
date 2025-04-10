@@ -2,14 +2,11 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://31e4dt5karoo"
+uid="uid://c4tx6cq0beqno"
 path.s3tc="res://.godot/imported/entrance-door_atlas_n.png-fc9475d0d1b95b1f547db20d1e7caa71.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
-}
-generator_parameters={
-"md5": "c72e882dba4b963cf1b0ad7cdbbf5106"
 }
 
 [deps]
@@ -28,7 +25,7 @@ compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=1
-roughness/src_normal="res://Scenes/entrance-door_atlas_n.png"
+roughness/src_normal="res://scenes/entrance-door_atlas_n.png"
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false
