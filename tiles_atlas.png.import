@@ -2,14 +2,11 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dnvo5itb74jxo"
+uid="uid://kufdhcheawdj"
 path.s3tc="res://.godot/imported/tiles_atlas.png-74ca6163404d105f720216267b4c9781.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
-}
-generator_parameters={
-"md5": "eb210caa139796618122022b4d7f7aa9"
 }
 
 [deps]

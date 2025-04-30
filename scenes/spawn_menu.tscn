@@ -8,7 +8,7 @@
 [ext_resource type="Script" path="res://scenes/water.gd" id="16_x8j5u"]
 [ext_resource type="AudioStream" uid="uid://bycd4qj6hl0i2" path="res://sound effects/CoastalWavesOnRocksLoop.wav" id="17_ih2k1"]
 [ext_resource type="Texture2D" uid="uid://ckrsj5go8ckwh" path="res://assets/textures/dev/grids/Dark/texture_07.png" id="19_bqkfx"]
-[ext_resource type="Texture2D" uid="uid://dnvo5itb74jxo" path="res://tiles_atlas.png" id="20_bci1f"]
+[ext_resource type="Texture2D" uid="uid://kufdhcheawdj" path="res://tiles_atlas.png" id="20_bci1f"]
 [ext_resource type="PackedScene" uid="uid://us0d318yheks" path="res://platform_dirt.tscn" id="21_uvtu0"]
 [ext_resource type="PackedScene" uid="uid://xbstjpcausjb" path="res://sign.tscn" id="22_4jnxf"]
 [ext_resource type="MeshLibrary" uid="uid://ovi4tpduubxe" path="res://sewer-assets.tres" id="23_3f0jp"]

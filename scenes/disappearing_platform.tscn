@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://ccw7bhu1ragkx"]
 
 [ext_resource type="Script" path="res://scenes/disappearing_platform.gd" id="1_05bon"]
-[ext_resource type="Texture2D" uid="uid://dnvo5itb74jxo" path="res://tiles_atlas.png" id="2_0iikr"]
+[ext_resource type="Texture2D" uid="uid://kufdhcheawdj" path="res://tiles_atlas.png" id="2_0iikr"]
 [ext_resource type="AudioStream" uid="uid://d1iva6ojiype4" path="res://sound effects/Rockfall1.wav" id="3_3tri7"]
 [ext_resource type="AudioStream" uid="uid://c7js3w70vhgrg" path="res://sound effects/Rockfall2.wav" id="4_e6dbr"]
 [ext_resource type="AudioStream" uid="uid://flqsugmymbvk" path="res://sound effects/DesignedAxe2.wav" id="5_qeh51"]

@@ -20,7 +20,7 @@
 [ext_resource type="AudioStream" uid="uid://1vvsh455y4j0" path="res://sound effects/ropeswinging.mp3" id="17_hcve2"]
 [ext_resource type="AudioStream" uid="uid://bycd4qj6hl0i2" path="res://sound effects/CoastalWavesOnRocksLoop.wav" id="18_qrwpu"]
 [ext_resource type="Texture2D" uid="uid://1avw8r08vy6a" path="res://kenney_crosshair-pack/PNG/White/crosshair020.png" id="19_by0wa"]
-[ext_resource type="Texture2D" uid="uid://dnvo5itb74jxo" path="res://tiles_atlas.png" id="20_ha35x"]
+[ext_resource type="Texture2D" uid="uid://kufdhcheawdj" path="res://tiles_atlas.png" id="20_ha35x"]
 [ext_resource type="Texture2D" uid="uid://ckrsj5go8ckwh" path="res://assets/textures/dev/grids/Dark/texture_07.png" id="20_lupgh"]
 [ext_resource type="PackedScene" uid="uid://us0d318yheks" path="res://platform_dirt.tscn" id="22_g51v5"]
 [ext_resource type="PackedScene" uid="uid://x4xnc85khpl5" path="res://scenes/path_3d_rope.tscn" id="23_k8ogm"]
