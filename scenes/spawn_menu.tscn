@@ -30,7 +30,7 @@
 [ext_resource type="Script" path="res://scenes/pickupdetection.gd" id="41_gtyvq"]
 [ext_resource type="PackedScene" uid="uid://k25k1j6ajwub" path="res://scenes/npc.tscn" id="42_0nkqx"]
 [ext_resource type="Texture2D" uid="uid://dqh7w386eojt2" path="res://texture/download.png" id="43_fqjkt"]
-[ext_resource type="Texture2D" uid="uid://cdjynjttyfi4s" path="res://tiles_atlas_n.png" id="44_g23ne"]
+[ext_resource type="Texture2D" uid="uid://d1upfnnany20w" path="res://tiles_atlas_n.png" id="44_g23ne"]
 [ext_resource type="AudioStream" uid="uid://hai1kyrqbi2b" path="res://sound effects/Laugh_spooky_4.wav" id="45_trr8j"]
 [ext_resource type="PackedScene" uid="uid://ddbd44df1vkrm" path="res://scenes/auto_door.tscn" id="46_qutjx"]
 [ext_resource type="PackedScene" path="res://Models/Skull_1.tscn" id="47_1y2g5"]

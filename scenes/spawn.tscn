@@ -42,7 +42,7 @@
 [ext_resource type="AudioStream" uid="uid://brt1o7w750try" path="res://sound effects/WaterSplash2.wav" id="40_8c45e"]
 [ext_resource type="PackedScene" uid="uid://dly8rl5jfskj0" path="res://scenes/path_3d_rope2.tscn" id="41_lm4jx"]
 [ext_resource type="Texture2D" uid="uid://dqh7w386eojt2" path="res://texture/download.png" id="42_tsiln"]
-[ext_resource type="Texture2D" uid="uid://cdjynjttyfi4s" path="res://tiles_atlas_n.png" id="43_meeie"]
+[ext_resource type="Texture2D" uid="uid://d1upfnnany20w" path="res://tiles_atlas_n.png" id="43_meeie"]
 [ext_resource type="PackedScene" uid="uid://k25k1j6ajwub" path="res://scenes/npc.tscn" id="44_c1b7q"]
 [ext_resource type="AudioStream" uid="uid://hai1kyrqbi2b" path="res://sound effects/Laugh_spooky_4.wav" id="45_iulu6"]
 [ext_resource type="PackedScene" uid="uid://ddbd44df1vkrm" path="res://scenes/auto_door.tscn" id="46_exwf3"]

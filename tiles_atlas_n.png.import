@@ -2,14 +2,11 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cdjynjttyfi4s"
+uid="uid://d1upfnnany20w"
 path.s3tc="res://.godot/imported/tiles_atlas_n.png-cd81c7c8dae1e3c5ea5b549748c3e2bd.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
-}
-generator_parameters={
-"md5": "c72e882dba4b963cf1b0ad7cdbbf5106"
 }
 
 [deps]
@@ -28,7 +25,7 @@ compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=1
-roughness/src_normal="res://Scenes/tiles_atlas_n.png"
+roughness/src_normal="res://tiles_atlas_n.png"
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false
