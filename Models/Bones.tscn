@@ -1,0 +1,43 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://BonesAsset/AssetScenes/Skull_2.tscn" type="PackedScene" id=1]
+[ext_resource path="res://BonesAsset/AssetScenes/Jaw.tscn" type="PackedScene" id=2]
+[ext_resource path="res://BonesAsset/AssetScenes/Spine.tscn" type="PackedScene" id=3]
+[ext_resource path="res://BonesAsset/AssetScenes/Bone_3.tscn" type="PackedScene" id=4]
+[ext_resource path="res://BonesAsset/AssetScenes/Ribs.tscn" type="PackedScene" id=5]
+[ext_resource path="res://BonesAsset/AssetScenes/Bone_1.tscn" type="PackedScene" id=6]
+[ext_resource path="res://BonesAsset/AssetScenes/Skull_1.tscn" type="PackedScene" id=7]
+[ext_resource path="res://BonesAsset/AssetScenes/Bone_2.tscn" type="PackedScene" id=8]
+[ext_resource path="res://BonesAsset/AssetScenes/HipBone_1.tscn" type="PackedScene" id=9]
+[ext_resource path="res://BonesAsset/AssetScenes/HipBone_2.tscn" type="PackedScene" id=10]
+
+[node name="Bones" type="Spatial"]
+
+[node name="Bone_1" parent="." instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.36022, 0, 0 )
+
+[node name="Bone_2" parent="." instance=ExtResource( 8 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.47367, 0, 0 )
+
+[node name="Bone_3" parent="." instance=ExtResource( 4 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.14807, 0, 0 )
+
+[node name="Ribs" parent="." instance=ExtResource( 5 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.919357, 0, 0 )
+
+[node name="Spine" parent="." instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.352513, 0, 0 )
+
+[node name="Skull_2" parent="." instance=ExtResource( 1 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.15276, 0, 0 )
+
+[node name="Jaw" parent="." instance=ExtResource( 2 )]
+
+[node name="HipBone_1" parent="." instance=ExtResource( 9 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.471628, 0, 0 )
+
+[node name="Skull_1" parent="." instance=ExtResource( 7 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.7867, 0, 0 )
+
+[node name="HipBone_2" parent="." instance=ExtResource( 10 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.06284, 0, 0 )

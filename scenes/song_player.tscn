@@ -1,0 +1,26 @@
+[gd_scene load_steps=6 format=3 uid="uid://c2djjcq1ksq5p"]
+
+[ext_resource type="Script" path="res://song_player.gd" id="1_q88h1"]
+[ext_resource type="AudioStream" uid="uid://c11yvleusmlap" path="res://sound effects/music/Rolling Deep.wav" id="2_0rm13"]
+[ext_resource type="AudioStream" uid="uid://ck3e77nkqfjmp" path="res://sound effects/music/Thalassa.wav" id="3_r6cc7"]
+[ext_resource type="AudioStream" uid="uid://7anureuqxcq" path="res://sound effects/music/Ancient Curse.wav" id="4_50qqh"]
+[ext_resource type="AudioStream" uid="uid://bt2kkahf5fqbn" path="res://sound effects/music/Untitled.wav" id="5_d6qxp"]
+
+[node name="SongPlayer" type="Node3D"]
+script = ExtResource("1_q88h1")
+
+[node name="rolling_deep" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("2_0rm13")
+volume_db = 30.0
+
+[node name="thalassa" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_r6cc7")
+volume_db = 30.0
+
+[node name="ancient_curse" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("4_50qqh")
+volume_db = 30.0
+
+[node name="unnamed_song" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("5_d6qxp")
+volume_db = 30.0

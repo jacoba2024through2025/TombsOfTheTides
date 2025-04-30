@@ -1,0 +1,19 @@
+[gd_scene load_steps=5 format=3 uid="uid://yf5vg3pin510"]
+
+[ext_resource type="PackedScene" uid="uid://b4f74nxp52qd5" path="res://Models/SpikeTrap.blend" id="1_w64se"]
+[ext_resource type="Texture2D" uid="uid://dpwqdr0xyq42w" path="res://tilewall.png" id="2_u0q56"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_woajf"]
+albedo_texture = ExtResource("2_u0q56")
+uv1_scale = Vector3(20, 20, 20)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7lf2p"]
+albedo_texture = ExtResource("2_u0q56")
+
+[node name="SpikeTrap" instance=ExtResource("1_w64se")]
+
+[node name="Base" parent="." index="0"]
+material_override = SubResource("StandardMaterial3D_woajf")
+
+[node name="Spikes" parent="Armature/Skeleton3D" index="0"]
+material_override = SubResource("StandardMaterial3D_7lf2p")

@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://d2gn5wd2qexd0"
+path="res://.godot/imported/DesignedPickaxe2.wav-9f73cca86c68e1c346fad83b2eb34707.sample"
+
+[deps]
+
+source_file="res://sound effects/DesignedPickaxe2.wav"
+dest_files=["res://.godot/imported/DesignedPickaxe2.wav-9f73cca86c68e1c346fad83b2eb34707.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://xbstjpcausjb"]
+
+[ext_resource type="PackedScene" uid="uid://ept6loobbfnc" path="res://Scenes/Sign_complete.glb" id="1_85lvt"]
+
+[node name="Sign" instance=ExtResource("1_85lvt")]
+
+[node name="Label3D" type="Label3D" parent="." index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.08932, 0.127232)
+font_size = 40

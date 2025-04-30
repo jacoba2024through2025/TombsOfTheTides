@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://7anureuqxcq"
+path="res://.godot/imported/Ancient Curse.wav-d1c398a22142b5f865d41a632d2227be.sample"
+
+[deps]
+
+source_file="res://sound effects/music/Ancient Curse.wav"
+dest_files=["res://.godot/imported/Ancient Curse.wav-d1c398a22142b5f865d41a632d2227be.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

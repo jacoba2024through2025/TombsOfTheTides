@@ -1,0 +1,38 @@
+[gd_scene load_steps=6 format=3 uid="uid://bxpbh4irvj3gp"]
+
+[ext_resource type="PackedScene" uid="uid://duw48llscnnbu" path="res://entrance-door.glb" id="1_5ms1j"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fu111"]
+size = Vector3(0.637512, 2.48627, 2.9917)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5a11y"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_x8nrl"]
+material = SubResource("StandardMaterial3D_5a11y")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_skxsl"]
+size = Vector3(1.00415, 3.03616, 0.491211)
+
+[node name="big-door" type="Node3D"]
+
+[node name="entrance-door" parent="." instance=ExtResource("1_5ms1j")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0283024, 0, 0.866993)
+
+[node name="RigidBody3D" type="RigidBody3D" parent="entrance-door"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="entrance-door/RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00314331, 1.25339, -0.00317383)
+shape = SubResource("BoxShape3D_fu111")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="entrance-door/RigidBody3D/CollisionShape3D"]
+transform = Transform3D(0.6, 0, 0, 0, 2.5, 0, 0, 0, 3, 0, -0.0155015, 0)
+mesh = SubResource("BoxMesh_x8nrl")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="entrance-door/RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00207519, 1.5248, 1.75569)
+shape = SubResource("BoxShape3D_skxsl")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="entrance-door/RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00207519, 1.5248, -1.74363)
+shape = SubResource("BoxShape3D_skxsl")
